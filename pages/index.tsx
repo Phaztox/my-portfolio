@@ -8,7 +8,6 @@ import Resume from "@/components/Resume";
 import Projects from "@/components/Projects";
 import Blog from "@/components/Blog";
 import Passions from "@/components/Passions";
-import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import SectionIndicator from "@/components/SectionIndicator";
 import ScrollHint from "@/components/ScrollHint";
@@ -97,16 +96,17 @@ export default function Home() {
       <ScrollHint show={currentSection === 0 && !isMobile} />
       
       {/* Scrolling sections */}
-      <div className="relative z-10">
+      <div className="relative z-10 pb-20"> {/* Add padding for footer */}
         <Hero />
         <About />
         <Resume />
         <Projects />
         <Blog />
         <Passions />
-        <Contact />
-        <Footer />
       </div>
+      
+      {/* Always visible footer */}
+      <Footer />
     </div>
   );
 }

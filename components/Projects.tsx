@@ -55,7 +55,7 @@ export default function Projects() {
   };
 
   return (
-    <section id="projects" className="section-container px-8 relative">
+    <section id="projects" className="section-container px-4 sm:px-8 relative">
       <motion.div 
         className="max-w-7xl mx-auto relative z-10 w-full"
         initial={{ opacity: 0, x: -100 }}
@@ -63,7 +63,7 @@ export default function Projects() {
         transition={{ duration: 0.8, ease: easeOut }}
       >
         <motion.h2 
-          className="text-5xl font-bold mb-16 text-center text-gray-900 dark:text-white"
+          className="text-3xl sm:text-4xl md:text-5xl font-bold mb-8 md:mb-16 text-center text-gray-900 dark:text-white"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -72,7 +72,7 @@ export default function Projects() {
         </motion.h2>
         
         <motion.div 
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-10"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -89,7 +89,7 @@ export default function Projects() {
               }}
             >
               <motion.div 
-                className="h-40 relative"
+                className="h-32 sm:h-40 relative"
                 style={{ backgroundColor: project.color }}
                 whileHover={{ 
                   scale: 1.1,
@@ -99,7 +99,7 @@ export default function Projects() {
                 <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300" />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <motion.div
-                    className="text-6xl text-white/80"
+                    className="text-4xl sm:text-6xl text-white/80"
                     whileHover={{ 
                       rotate: 360,
                       scale: 1.2,
@@ -111,19 +111,19 @@ export default function Projects() {
                 </div>
               </motion.div>
               
-              <div className="p-8">
-                <h3 className="font-bold text-2xl mb-4 text-gray-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors">
+              <div className="p-4 sm:p-6 md:p-8">
+                <h3 className="font-bold text-lg sm:text-xl md:text-2xl mb-3 md:mb-4 text-gray-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors">
                   {project.title}
                 </h3>
-                <p className="text-lg mb-6 text-gray-600 dark:text-gray-300 leading-relaxed">
+                <p className="text-sm sm:text-base md:text-lg mb-4 md:mb-6 text-gray-600 dark:text-gray-300 leading-relaxed">
                   {project.desc}
                 </p>
                 
-                <div className="flex flex-wrap gap-2 mb-6">
+                <div className="flex flex-wrap gap-2 mb-4 md:mb-6">
                   {project.tech.map((tech, techI) => (
                     <span 
                       key={techI}
-                      className="px-3 py-1 text-sm rounded-full bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300"
+                      className="px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-full bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300"
                     >
                       {tech}
                     </span>
@@ -132,7 +132,7 @@ export default function Projects() {
                 
                 <motion.a
                   href={project.link}
-                  className="inline-flex items-center px-6 py-3 rounded-xl text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 rounded-xl text-white font-semibold text-sm sm:text-base md:text-lg shadow-lg hover:shadow-xl transition-all duration-300"
                   style={{ backgroundColor: project.color }}
                   whileHover={{ 
                     scale: 1.05,
