@@ -35,7 +35,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.9 }}
         >
           <motion.a
-            href="https://raw.githubusercontent.com/Phaztox/portfolio/main/files/CV_Antonin_Lechen_GABET_EN.pdf"
+            href="https://raw.githubusercontent.com/Phaztox/my-portfolio/master/files/CV_Antonin_Lechen_GABET_EN.pdf"
             className="px-10 py-4 text-white rounded-xl shadow-xl hover:shadow-2xl text-lg font-semibold transform transition-all duration-300"
             style={{ backgroundColor: '#F7A8B8' }}
             whileHover={{ 
