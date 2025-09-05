@@ -12,8 +12,8 @@ export const useSectionScroll = () => {
     'about', 
     'resume',
     'projects',
-    'blog',
-    'passions'
+    'passions',
+    'blog'
   ];
 
   // Check if device is mobile

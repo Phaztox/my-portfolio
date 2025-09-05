@@ -5,7 +5,7 @@ import Link from "next/link";
 const passions = [
   { 
     title: "Gaming", 
-    desc: "Exploring immersive worlds and strategy. I strive to optimize stats and search for the best outputs that we can possibly achieve.", 
+    desc: "Gaming is my ultimate arena for min-maxing builds and dominating the meta with a programming-driven mindset. The thrill is flawlessly executing meticulously engineered strategies.", 
     icon: "🎮", 
     color: "#F7A8B8",
     href: "/passions/gaming"

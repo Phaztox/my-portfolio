@@ -49,14 +49,13 @@ export default function Navbar() {
     { href: "#about", label: "About Me" },
     { href: "#resume", label: "Studies" },
     { href: "#projects", label: "Projects" },
-    { href: "#blog", label: "Blog" },
   ];
 
   const passionPages = [
-    { href: "/passions/gaming", label: "Gaming", icon: "🎮" },
-    { href: "/passions/music", label: "Music", icon: "🎵" },
-    { href: "/passions/asian-culture", label: "Asian Culture", icon: "🏮" },
-    { href: "/passions/stats-and-logic", label: "Stats & Logic", icon: "📊" },
+    { href: "/passions/gaming", label: "Gaming" , icon: ""},
+    { href: "/passions/music", label: "Music", icon: "" },
+    { href: "/passions/asian-culture", label: "Asian Culture", icon: "" },
+    { href: "/passions/stats-and-logic", label: "Stats & Logic", icon: "" },
   ];
 
   return (
@@ -118,7 +117,7 @@ export default function Navbar() {
             }`}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
             whileHover={{ scale: 1.05 }}
           >
             Passions
@@ -150,15 +149,27 @@ export default function Navbar() {
                 }`}
                 onMouseLeave={() => setIsPassionsOpen(false)}
               >
+                <Link
+                  href="#passions"
+                  className={`flex items-center gap-3 px-4 py-3 transition-colors border-b ${
+                    darkMode 
+                      ? 'hover:bg-gray-700/50 text-gray-200 hover:text-purple-300 border-gray-700/50' 
+                      : 'hover:bg-gray-100/50 text-gray-700 hover:text-pink-500 border-gray-200/50'
+                  } rounded-t-xl`}
+                  onClick={() => setIsPassionsOpen(false)}
+                >
+                  <span className="text-lg"></span>
+                  <span className="font-medium text-sm">Passions Section</span>
+                </Link>
                 {passionPages.map((passion, index) => (
                   <Link
                     key={passion.href}
                     href={passion.href}
-                    className={`flex items-center gap-3 px-4 py-3 transition-colors first:rounded-t-xl last:rounded-b-xl ${
+                    className={`flex items-center gap-3 px-4 py-3 transition-colors ${
                       darkMode 
                         ? 'hover:bg-gray-700/50 text-gray-200 hover:text-purple-300' 
                         : 'hover:bg-gray-100/50 text-gray-700 hover:text-pink-500'
-                    }`}
+                    } ${index === passionPages.length - 1 ? 'rounded-b-xl' : ''}`}
                     onClick={() => setIsPassionsOpen(false)}
                   >
                     <span className="text-lg">{passion.icon}</span>
@@ -169,6 +180,25 @@ export default function Navbar() {
             )}
           </AnimatePresence>
         </div>
+        
+        {/* Blog Link */}
+        <motion.a
+          href="#blog"
+          className={`relative group font-medium transition-colors text-sm xl:text-base ${
+            darkMode ? 'text-gray-200 hover:text-purple-300' : 'text-gray-700 hover:text-pink-500'
+          }`}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          whileHover={{ scale: 1.05 }}
+        >
+          Blog
+          <span 
+            className={`absolute left-0 -bottom-1 w-0 h-0.5 transition-all group-hover:w-full ${
+              darkMode ? 'bg-purple-300' : 'bg-pink-500'
+            }`}
+          ></span>
+        </motion.a>
         
         <motion.button
           onClick={toggleTheme}
@@ -271,6 +301,21 @@ export default function Navbar() {
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
+                    <Link
+                      href="#passions"
+                      className={`flex items-center gap-3 px-6 py-3 transition-colors border-b ${
+                        darkMode 
+                          ? 'hover:bg-gray-700/50 text-gray-200 hover:text-purple-300 border-gray-700/50' 
+                          : 'hover:bg-gray-100/50 text-gray-700 hover:text-pink-500 border-gray-200/50'
+                      }`}
+                      onClick={() => {
+                        setIsPassionsOpen(false);
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      <span className="text-lg">✨</span>
+                      <span className="font-medium text-sm">Main Passions</span>
+                    </Link>
                     {passionPages.map((passion, index) => (
                       <Link
                         key={passion.href}
@@ -292,6 +337,21 @@ export default function Navbar() {
                   </motion.div>
                 )}
               </AnimatePresence>
+            </div>
+            
+            {/* Mobile Blog Link */}
+            <div className={`border-t ${darkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
+              <a
+                href="#blog"
+                className={`block px-4 py-3 transition-colors rounded-b-xl ${
+                  darkMode 
+                    ? 'hover:bg-gray-700/50 text-gray-200 hover:text-purple-300' 
+                    : 'hover:bg-gray-100/50 text-gray-700 hover:text-pink-500'
+                }`}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Blog
+              </a>
             </div>
           </motion.div>
         )}

@@ -101,8 +101,8 @@ export default function Home() {
         <About />
         <Resume />
         <Projects />
-        <Blog />
         <Passions />
+        <Blog />
       </div>
       
       {/* Always visible footer */}
