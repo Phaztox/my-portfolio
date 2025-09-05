@@ -1,42 +1,131 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* my-portfolio/styles/globals.css */
+@import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: light dark;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+body {
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  overflow-y: hidden; /* Hide vertical scrollbar on desktop */
+}
+
+/* Show scrollbar only on mobile */
+@media (hover: none) and (pointer: coarse) {
+  body {
+    overflow-y: auto;
   }
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
+/* Custom animations */
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0px) translateX(0px) scale(1);
+  }
+  25% { 
+    transform: translateY(-20px) translateX(10px) scale(1.05);
+  }
+  50% { 
+    transform: translateY(-40px) translateX(0px) scale(1.1);
+  }
+  75% { 
+    transform: translateY(-20px) translateX(-10px) scale(1.05);
+  }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@keyframes slideInFromBottom {
+  from {
+    transform: translateY(100vh) scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100vw) rotateY(-45deg);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0) rotateY(0deg);
+    opacity: 1;
+  }
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100vw) rotateY(45deg);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0) rotateY(0deg);
+    opacity: 1;
+  }
 }
 
-@media (prefers-color-scheme: dark) {
+.animate-float {
+  animation: float ease-in-out infinite;
+}
+
+/* Smooth section transitions */
+.section-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  scroll-snap-align: start;
+}
+
+/* Main content container for snap scrolling */
+.snap-container {
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  height: 100vh;
+}
+
+/* Disable scroll snap on touch devices for better mobile experience */
+@media (hover: none) and (pointer: coarse) {
+  .snap-container {
+    scroll-snap-type: none;
+  }
+  .section-container {
+    scroll-snap-align: none;
+  }
+}
+
+/* Custom scrollbar - only visible on mobile */
+@media (hover: none) and (pointer: coarse) {
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(203, 179, 238, 0.1);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #F7A8B8, #CBB3EE);
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #EC4899, #A855F7);
+  }
+}
+
+/* Hide scrollbar on desktop */
+@media (hover: hover) and (pointer: fine) {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Firefox */
   html {
-    color-scheme: dark;
+    scrollbar-width: none;
   }
 }
