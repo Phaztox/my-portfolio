@@ -20,7 +20,6 @@ const projects = [
     title: "Connect 4 Algorithm", 
     desc: "Advanced algorithm research for optimizing gameplay in Connect 4 using Minimax and Alpha-Beta pruning.",
     tech: ["Python", "Minimax", "Game Theory"],
-    link: "#",
     color: '#CBB3EE'
   },
 ];
