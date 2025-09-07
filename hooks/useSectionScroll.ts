@@ -150,20 +150,30 @@ export const useSectionScroll = () => {
   // Detect current section on manual scroll (for navigation clicks and mobile)
   useEffect(() => {
     const handleIntersection = (entries: IntersectionObserverEntry[]) => {
+      // Find the entry with the highest intersection ratio
+      let mostVisibleEntry = null as IntersectionObserverEntry | null;
+      let highestRatio = 0;
+
       entries.forEach((entry) => {
-        if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
-          const sectionId = entry.target.id;
-          const sectionIndex = sections.indexOf(sectionId);
-          if (sectionIndex !== -1 && sectionIndex !== currentSection) {
-            setCurrentSection(sectionIndex);
-          }
+        if (entry.isIntersecting && entry.intersectionRatio > highestRatio) {
+          mostVisibleEntry = entry;
+          highestRatio = entry.intersectionRatio;
         }
       });
+
+      if (mostVisibleEntry && highestRatio > 0.3) {
+        const element = mostVisibleEntry.target as Element;
+        const sectionId = element.id;
+        const sectionIndex = sections.indexOf(sectionId);
+        if (sectionIndex !== -1) {
+          setCurrentSection(sectionIndex);
+        }
+      }
     };
 
     const observer = new IntersectionObserver(handleIntersection, {
-      threshold: 0.5,
-      rootMargin: '-50px 0px -50px 0px'
+      threshold: [0.3, 0.5, 0.7], // Multiple thresholds for better detection
+      rootMargin: '-100px 0px -100px 0px' // More aggressive margin for mobile
     });
 
     sections.forEach((sectionId) => {
@@ -176,7 +186,7 @@ export const useSectionScroll = () => {
     return () => {
       observer.disconnect();
     };
-  }, [currentSection]);
+  }, []); // Empty dependency array to prevent recreation
 
   return {
     currentSection,

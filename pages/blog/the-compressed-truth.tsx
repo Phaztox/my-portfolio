@@ -193,7 +193,7 @@ export default function TheCompressedTruth() {
                   </svg>
                 </div>
                 
-                <h3 className={`text-2xl font-bold mb-6 flex items-center tracking-tight transition-colors group-hover:scale-105 ${
+                <h3 className={`text-2xl font-bold mb-6 flex items-center tracking-tight transition-colors ${
                   darkMode ? 'text-purple-300 group-hover:text-purple-200' : 'text-purple-700 group-hover:text-purple-600'
                 }`}>
                   <span className={`mr-4 text-4xl transition-transform group-hover:rotate-12 ${

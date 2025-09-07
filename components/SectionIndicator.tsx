@@ -17,8 +17,8 @@ export default function SectionIndicator({
     'About',
     'Resume', 
     'Projects',
-    'Blog',
-    'Passions'
+    'Passions',
+    'Blog'
   ];
 
   return (
