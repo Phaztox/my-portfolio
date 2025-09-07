@@ -1,4 +1,4 @@
-// pages/_app.tsx - WITH THEME CONTEXT AND GLOBAL MOBILE SCROLLBAR
+// pages/_app.tsx - WITH THEME CONTEXT AND FIREFOX HASH NAVIGATION FIX
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import { ThemeProvider } from '@/contexts/ThemeContext';
@@ -7,6 +7,49 @@ import { useRouter } from 'next/router';
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
+
+  // Fix for Firefox hash navigation
+  useEffect(() => {
+    const handleHashNavigation = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        // Remove the # symbol
+        const targetId = hash.substring(1);
+        const targetElement = document.getElementById(targetId);
+        
+        if (targetElement) {
+          // Delay to ensure page is fully loaded
+          setTimeout(() => {
+            targetElement.scrollIntoView({ 
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }, 100);
+        }
+      }
+    };
+
+    // Handle hash navigation on route changes
+    const handleRouteChangeComplete = () => {
+      setTimeout(handleHashNavigation, 200);
+    };
+
+    // Handle hash changes (for Firefox)
+    const handleHashChange = () => {
+      handleHashNavigation();
+    };
+
+    // Initial hash navigation
+    handleHashNavigation();
+    
+    router.events.on('routeChangeComplete', handleRouteChangeComplete);
+    window.addEventListener('hashchange', handleHashChange);
+
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChangeComplete);
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, [router.events]);
 
   // Global mobile scrollbar functionality
   useEffect(() => {
@@ -106,10 +149,8 @@ export default function App({ Component, pageProps }: AppProps) {
             // Back to main page - restore position
             window.scrollTo(0, savedPosition);
           } else if (isMainPageWithHash) {
-            // Navigation to main page with hash (e.g., /#passions, /#blog)
-            // Let the browser handle the hash navigation naturally
-            // Don't force scroll to top, let it scroll to the section
-            window.location.hash = url.substring(1); // Set the hash
+            // Hash navigation is now handled by the dedicated hash handler above
+            // Don't interfere with it here
           } else {
             // For other pages or new navigation, start from top
             const scrollableContainer = document.querySelector('.min-h-screen.overflow-y-auto');
