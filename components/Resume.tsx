@@ -9,12 +9,12 @@ const timeline = [
   },
   { 
     year: "2022 - 2023", 
-    title: "CPGE : MPSI, Lycée J-B Corot",
+    title: "CPGE : MPSI, Lycée J - B Corot",
     description: "Intensive preparatory classes focusing on Mathematics, Physics, and Engineering Sciences. Developed strong analytical thinking, problem-solving skills, and mathematical rigor essential for engineering studies."
   },
   { 
     year: "2022", 
-    title: "A-Levels – Lycée Léonard de Vinci",
+    title: "A - Levels - Lycée Léonard de Vinci",
     description: "Completed French Baccalauréat with specialization in Mathematics and Physics. Achieved strong academic foundation in sciences and developed passion for data analysis and logical reasoning."
   },
 ];

@@ -116,15 +116,15 @@ export default function AsianCulture() {
               Cultural Fascination
             </h2>
             <p className={`text-lg mb-6 leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              I’ve always been fascinated by the way Asian cultures, especially in Japan and China, 
+              I've always been fascinated by the way Asian cultures, especially in Japan and China, 
               manage to blend history and modernity so seamlessly. I love how centuries-old traditions coexist 
               with some of the most advanced technologies in the world, creating a balance that shapes 
               art, philosophy, and everyday life in a really unique way. On a personal level, 
-              I’m drawn to many aspects of this culture — from anime, manga, and music to the more recent internet culture 
+              I'm drawn to many aspects of this culture; from anime, manga, and music to the more recent internet culture 
               that has grown so quickly in Asia. Being half Chinese myself, with a mother from China and a father from France, 
               I feel connected to both worlds, and I really enjoy noticing the different perspectives on technology 
               and society that Asian cultures bring compared to the European vision. 
-              It’s something that inspires me a lot, both personally and in the way I think about innovation.
+              It's something that inspires me a lot, both personally and in the way I think about innovation.
             </p>
             
             <h3 className={`text-2xl font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -156,8 +156,8 @@ export default function AsianCulture() {
             </h3>
             <p className={`text-lg mb-6 leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
               What strikes me most in Asian cultures is how philosophy and technology are often seen as connected 
-              rather than separate. Ideas like harmony, balance, and the Japanese principle of kaizen — continuous 
-              improvement through small, steady steps — really resonate with the way I think about both software 
+              rather than separate. Ideas like harmony, balance, and the Japanese principle of kaizen - continuous 
+              improvement through small, steady steps - really resonate with the way I think about both software 
               development and personal growth. This mindset of blending values with innovation feels unique 
               compared to other approaches, and I find that truly inspiring.
             </p>

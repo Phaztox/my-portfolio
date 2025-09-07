@@ -268,7 +268,7 @@ export default function TheCompressedTruth() {
                       </svg>
                     </div>
                     <p className="text-lg leading-relaxed font-medium">
-                      A core distinction in this domain is between <strong className={`font-bold ${darkMode ? 'text-blue-300' : 'text-blue-700'}`}>lossless</strong> and <strong className={`font-bold ${darkMode ? 'text-blue-300' : 'text-blue-700'}`}>lossy</strong> compression. Lossless compression aims for efficiency by reducing file size without sacrificing any original information. An analogy for this might be meticulously folding clothes to maximize drawer space – nothing is removed, only reorganized. Conversely, lossy compression prioritizes a greater reduction in size, accepting the sacrifice of less relevant information. This can be likened to summarizing an extensive document into a concise list of key points. The objective is to discard data that is unlikely to be perceived as missing by human senses.
+                      A core distinction in this domain is between <strong className={`font-bold ${darkMode ? 'text-blue-300' : 'text-blue-700'}`}>lossless</strong> and <strong className={`font-bold ${darkMode ? 'text-blue-300' : 'text-blue-700'}`}>lossy</strong> compression. Lossless compression aims for efficiency by reducing file size without sacrificing any original information. An analogy for this might be meticulously folding clothes to maximize drawer space: nothing is removed, only reorganized. Conversely, lossy compression prioritizes a greater reduction in size, accepting the sacrifice of less relevant information. This can be likened to summarizing an extensive document into a concise list of key points. The objective is to discard data that is unlikely to be perceived as missing by human senses.
                     </p>
                   </div>
 
@@ -277,7 +277,7 @@ export default function TheCompressedTruth() {
                   </p>
 
                   <p className={`text-lg leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    When discussing "better compression" for video, image, or sound, the reference is to achieving a perceptibly similar quality with a smaller file size. This relies on advanced <strong className={`font-bold ${darkMode ? 'text-purple-300' : 'text-purple-600'}`}>mathematical algorithms</strong>, innovative computational thinking, and robust technical performance. The "perceptible quality" aspect underscores a fascinating human element in this research – how algorithms are designed to detect and prioritize which information to retain or discard, based on the nuances of human visual and auditory perception.
+                    When discussing "better compression" for video, image, or sound, the reference is to achieving a perceptibly similar quality with a smaller file size. This relies on advanced <strong className={`font-bold ${darkMode ? 'text-purple-300' : 'text-purple-600'}`}>mathematical algorithms</strong>, innovative computational thinking, and robust technical performance. The "perceptible quality" aspect underscores a fascinating human element in this research: how algorithms are designed to detect and prioritize which information to retain or discard, based on the nuances of human visual and auditory perception.
                   </p>
                 </div>
               </motion.div>

@@ -159,7 +159,7 @@ export default function StatsLogic() {
               invisible to human perception. While I acknowledge the ethical considerations, especially in 
               sensitive domains like biology, this capability remains utterly captivating. The sheer potential 
               for automation and accelerating complex work is a significant advantage. But what truly fuels 
-              my fascination with AI is the constant discovery – every day, week, and month brings new possibilities 
+              my fascination with AI is the constant discovery - every day, week, and month brings new possibilities 
               and usages to imagine. This seemingly infinite source of potential is precisely why I love this field.
             </p>
 

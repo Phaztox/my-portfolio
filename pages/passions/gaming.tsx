@@ -120,7 +120,7 @@ export default function Gaming() {
               strategic thinking, and continually pushing the boundaries of what's possible. I'm always driven 
               by the quest to fine-tune stats and uncover the most effective outputs, striving for peak performance. 
               I vividly recall the immense satisfaction of meticulously crafting a strategy, envisioning its every step, 
-              and then seeing it flawlessly execute in practice – that perfect alignment between theory and outcome is 
+              and then seeing it flawlessly execute in practice - that perfect alignment between theory and outcome is 
               truly the best feeling. Whether it's min-maxing character builds, developing highly efficient game plans, 
               or diving deep to master complex mechanics, I approach gaming with the same rigorous, analytical mindset 
               I apply to programming or scientific research. Pushing those boundaries means I'm often experimenting with unconventional 
@@ -193,7 +193,7 @@ export default function Gaming() {
               The analytical skills I've developed through gaming directly translate to my programming work. 
               Problem-solving, optimization thinking, and systematic approach to challenges are skills that 
               benefit both domains. Gaming has taught me to think in terms of systems, efficiency, and 
-              continuous improvement—principles that are fundamental to good software development.
+              continuous improvement; principles that are fundamental to good software development.
             </p>
           </motion.div>
         </div>

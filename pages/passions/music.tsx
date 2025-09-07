@@ -161,7 +161,7 @@ export default function Music() {
             </h3>
             <p className={`text-lg mb-6 leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
               Beyond expertise and technical appreciation, music has always been a fundamental part of my existence. 
-              It's been a constant presence, right from my earliest memories—even before—to listening to my parents' 
+              It's been a constant presence, right from my earliest memories - even before - to listening to my parents' 
               CDs, through my years at the piano, and to discovering countless new genres online, which 
               I still do today. Music is my go-to for focusing during intense study sessions, finding rhythm 
               while programming, unwinding after a long day, or enhancing the immersion of gaming. It's a 
