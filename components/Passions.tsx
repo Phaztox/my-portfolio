@@ -40,12 +40,12 @@ export default function Passions() {
   return (
     <section 
       id="passions" 
-      className="section-container px-8 relative overflow-hidden"
+      className="section-container px-6 sm:px-8 relative overflow-hidden"
     >
       
       <div className="max-w-4xl mx-auto relative z-10 w-full">
         <motion.h2 
-          className={`text-4xl font-bold mb-12 text-center ${darkMode ? 'text-white' : 'text-gray-900'}`}
+          className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-8 md:mb-12 text-center ${darkMode ? 'text-white' : 'text-gray-900'}`}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.3 }}

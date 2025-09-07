@@ -30,9 +30,13 @@ export default function Home() {
       document.documentElement.style.overflow = 'auto';
     }
     
+    // Add main-scrollbar class to body for colored scrollbar
+    document.body.classList.add('main-scrollbar');
+    
     return () => {
       document.body.style.overflow = 'auto';
       document.documentElement.style.overflow = 'auto';
+      document.body.classList.remove('main-scrollbar');
     };
   }, [isMobile]);
 

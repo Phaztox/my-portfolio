@@ -7,16 +7,54 @@ import { useEffect } from "react";
 export default function TheCompressedTruth() {
   const { darkMode, toggleTheme } = useTheme();
 
-  // Ensure scrolling is enabled on this page
+  // Ensure scrolling is enabled on this page and hide scrollbar on desktop only
   useEffect(() => {
     document.body.style.overflow = 'auto';
     document.documentElement.style.overflow = 'auto';
     document.documentElement.style.scrollBehavior = 'smooth';
     
+    // Hide scrollbar on desktop with more aggressive targeting
+    const isDesktop = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    
+    if (isDesktop) {
+      document.body.setAttribute('data-hide-scrollbar', 'true');
+      document.documentElement.setAttribute('data-hide-scrollbar', 'true');
+      
+      // Add additional inline styles for desktop scrollbar hiding
+      document.documentElement.style.scrollbarWidth = 'none';
+      (document.documentElement.style as any).msOverflowStyle = 'none';
+      document.body.style.scrollbarWidth = 'none';
+      (document.body.style as any).msOverflowStyle = 'none';
+      
+      // Add webkit scrollbar hiding
+      const style = document.createElement('style');
+      style.textContent = `
+        html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    // Debug: Check device type
+    console.log('Blog page - Is mobile device:', isMobile);
+    console.log('Blog page - Is desktop device:', isDesktop);
+    console.log('Blog page - Dark mode:', darkMode);
+    console.log('Blog page - Should have colored scrollbar on mobile:', isMobile);
+    
     return () => {
-      // Cleanup is handled by the main page's useEffect when navigating back
+      // Cleanup when leaving the page
+      document.body.removeAttribute('data-hide-scrollbar');
+      document.documentElement.removeAttribute('data-hide-scrollbar');
+      document.documentElement.style.scrollbarWidth = '';
+      (document.documentElement.style as any).msOverflowStyle = '';
+      document.body.style.scrollbarWidth = '';
+      (document.body.style as any).msOverflowStyle = '';
+      console.log('Blog page: Cleanup');
     };
-  }, []);
+  }, [darkMode]);
 
   return (
     <div className={`min-h-screen overflow-y-auto transition-all duration-300 ${

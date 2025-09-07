@@ -9,14 +9,6 @@ html {
 body {
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
-  overflow-y: hidden; /* Hide vertical scrollbar on desktop */
-}
-
-/* Show scrollbar only on mobile */
-@media (hover: none) and (pointer: coarse) {
-  body {
-    overflow-y: auto;
-  }
 }
 
 /* Custom animations */
@@ -79,6 +71,16 @@ body {
   align-items: center;
   position: relative;
   scroll-snap-align: start;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+/* Add more spacing on mobile */
+@media (max-width: 768px) {
+  .section-container {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
 }
 
 /* Main content container for snap scrolling */
@@ -98,34 +100,84 @@ body {
   }
 }
 
-/* Custom scrollbar - only visible on mobile */
+/* Mobile scrollbar - CUSTOM OVERLAY APPROACH */
 @media (hover: none) and (pointer: coarse) {
-  ::-webkit-scrollbar {
-    width: 8px;
+  /* Hide default scrollbars completely */
+  html, body {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
   }
-
-  ::-webkit-scrollbar-track {
-    background: rgba(203, 179, 238, 0.1);
+  
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    display: none !important;
   }
-
-  ::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #F7A8B8, #CBB3EE);
-    border-radius: 10px;
+  
+  /* Custom scrollbar thumb only (no track/railing) */
+  body.scrolling::before {
+    content: '';
+    position: fixed;
+    top: calc(10px + (100vh - 80px) * var(--scroll-progress, 0));
+    right: 6px;
+    width: 4px;
+    height: 50px;
+    background: linear-gradient(
+      180deg,
+      rgba(247, 168, 184, 0.9) 0%,    /* More visible light pink */
+      rgba(203, 179, 238, 0.8) 50%,   /* More visible light purple */
+      rgba(173, 216, 230, 0.7) 100%   /* More visible light blue */
+    );
+    border-radius: 2px;
+    z-index: 30;  /* Lower than navbar (60) and footer (40) */
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease, top 0.1s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #EC4899, #A855F7);
+  
+  /* Show custom scrollbar thumb when scrolling */
+  body.scrolling::before {
+    opacity: 0.8;
+  }
+  
+  /* Hide all other scrollbars */
+  *:not(html):not(body)::-webkit-scrollbar {
+    display: none !important;
+  }
+  
+  *:not(html):not(body) {
+    scrollbar-width: none !important;
   }
 }
 
-/* Hide scrollbar on desktop */
+/* Hide scrollbar on desktop for specific pages - more specific targeting */
 @media (hover: hover) and (pointer: fine) {
-  ::-webkit-scrollbar {
-    display: none;
+  /* Hide scrollbar on passion pages and blog post */
+  body[data-hide-scrollbar="true"],
+  body[data-hide-scrollbar="true"] *,
+  body[data-hide-scrollbar="true"] html,
+  body[data-hide-scrollbar="true"] div {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
   }
   
-  /* Firefox */
-  html {
-    scrollbar-width: none;
+  body[data-hide-scrollbar="true"] ::-webkit-scrollbar,
+  body[data-hide-scrollbar="true"] *::-webkit-scrollbar,
+  body[data-hide-scrollbar="true"] html::-webkit-scrollbar,
+  body[data-hide-scrollbar="true"] div::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+  
+  /* Ensure content is still scrollable */
+  body[data-hide-scrollbar="true"] {
+    overflow-y: auto !important;
+  }
+  
+  /* Additional targeting for stubborn scrollbars */
+  html[data-hide-scrollbar="true"]::-webkit-scrollbar,
+  html[data-hide-scrollbar="true"] *::-webkit-scrollbar {
+    display: none !important;
   }
 }

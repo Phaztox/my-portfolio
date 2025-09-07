@@ -24,15 +24,15 @@ export default function Resume() {
   const { darkMode } = useTheme();
 
   return (
-    <section id="resume" className="section-container px-8 relative">
+    <section id="resume" className="section-container px-6 sm:px-8 relative">
       <div className="max-w-5xl mx-auto relative z-10 w-full">
-        <h2 className={`text-5xl font-bold mb-16 text-center ${
+        <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-8 md:mb-12 text-center ${
           darkMode ? 'text-white' : 'text-gray-900'
         }`}>
           My Studies
         </h2>
         
-        <div className={`relative border-l-4 pl-12 space-y-16 ${
+        <div className={`relative border-l-4 pl-8 sm:pl-12 space-y-12 sm:space-y-16 ${
           darkMode ? 'border-purple-400' : 'border-pink-400'
         }`}>
           {timeline.map((item, i) => (
@@ -41,31 +41,31 @@ export default function Resume() {
               className="relative group"
             >
               <div
-                className={`absolute -left-6 top-2 w-8 h-8 rounded-full border-4 ${
+                className={`absolute -left-5 sm:-left-6 top-2 w-6 h-6 sm:w-8 sm:h-8 rounded-full border-4 ${
                   darkMode ? 'border-gray-800' : 'border-white'
                 }`}
                 style={{ backgroundColor: '#F7A8B8' }}
               />
               
-              <div className={`backdrop-blur-lg rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:-translate-y-2 relative ${
+              <div className={`backdrop-blur-lg rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:-translate-y-2 relative ${
                 darkMode 
                   ? 'bg-gray-800/70 border border-gray-700/60' 
                   : 'bg-white/80 border border-gray-200/60'
               }`}>
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className={`text-xl font-bold leading-tight flex-1 pr-6 ${
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 gap-3">
+                  <h3 className={`text-lg sm:text-xl font-bold leading-tight flex-1 ${
                     darkMode ? 'text-white' : 'text-gray-900'
                   }`}>
                     {item.title}
                   </h3>
                   <span 
-                    className="text-base font-bold px-4 py-2 rounded-xl text-white shrink-0 absolute top-4 right-4"
+                    className="text-sm sm:text-base font-bold px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-white shrink-0 w-fit"
                     style={{ backgroundColor: '#CBB3EE' }}
                   >
                     {item.year}
                   </span>
                 </div>
-                <p className={`leading-relaxed mt-8 ${
+                <p className={`leading-relaxed mt-4 sm:mt-8 ${
                   darkMode ? 'text-gray-200' : 'text-gray-600'
                 }`}>
                   {item.description}

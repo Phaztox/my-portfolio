@@ -2,9 +2,38 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useEffect } from "react";
 
 export default function Music() {
   const { darkMode, toggleTheme } = useTheme();
+
+  // Hide scrollbar on desktop only
+  useEffect(() => {
+    const isDesktop = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    
+    if (isDesktop) {
+      document.body.setAttribute('data-hide-scrollbar', 'true');
+      document.documentElement.setAttribute('data-hide-scrollbar', 'true');
+    }
+    
+    // For mobile, ensure the scrollbar works by triggering a scroll event
+    if (isMobile) {
+      setTimeout(() => {
+        // Trigger scroll event to initialize mobile scrollbar
+        const scrollableContainer = document.querySelector('.min-h-screen.overflow-y-auto');
+        if (scrollableContainer) {
+          const event = new Event('scroll');
+          scrollableContainer.dispatchEvent(event);
+        }
+      }, 200);
+    }
+    
+    return () => {
+      document.body.removeAttribute('data-hide-scrollbar');
+      document.documentElement.removeAttribute('data-hide-scrollbar');
+    };
+  }, []);
 
   return (
     <div className={`min-h-screen overflow-y-auto transition-all duration-300 ${

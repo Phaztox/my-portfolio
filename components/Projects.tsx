@@ -65,7 +65,7 @@ export default function Projects() {
         transition={{ duration: 0.8, ease: easeOut }}
       >
         <motion.h2 
-          className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-8 md:mb-16 text-center ${
+          className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-8 md:mb-12 text-center ${
             darkMode ? 'text-white' : 'text-gray-900'
           }`}
           initial={{ opacity: 0, scale: 0.8 }}
@@ -97,7 +97,7 @@ export default function Projects() {
               }}
             >
               <motion.div 
-                className="h-32 sm:h-40 relative"
+                className="h-24 sm:h-28 md:h-32 relative"
                 style={{ backgroundColor: project.color }}
                 whileHover={{ 
                   scale: 1.1,
@@ -107,7 +107,7 @@ export default function Projects() {
                 <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300" />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <motion.div
-                    className="text-4xl sm:text-6xl text-white/80"
+                    className="text-3xl sm:text-4xl md:text-5xl text-white/80"
                     whileHover={{ 
                       rotate: 360,
                       scale: 1.2,

@@ -11,6 +11,9 @@ export default function Navbar() {
   const [isPassionsOpen, setIsPassionsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const passionsRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const navbarRef = useRef<HTMLElement>(null);
+  const passionsButtonRef = useRef<HTMLButtonElement>(null);
 
   // Prevent hydration mismatch
   useEffect(() => {
@@ -31,14 +34,36 @@ export default function Navbar() {
 
   // Close passions dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (passionsRef.current && !passionsRef.current.contains(event.target as Node)) {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as Node;
+      
+      // Close passions dropdown if clicking outside (but not on the button itself)
+      if (
+        passionsRef.current && 
+        !passionsRef.current.contains(target) &&
+        passionsButtonRef.current &&
+        !passionsButtonRef.current.contains(target)
+      ) {
         setIsPassionsOpen(false);
+      }
+      
+      // Close mobile menu if clicking outside the navbar and mobile menu
+      if (
+        mobileMenuRef.current && 
+        !mobileMenuRef.current.contains(target) &&
+        navbarRef.current &&
+        !navbarRef.current.contains(target)
+      ) {
+        setIsMobileMenuOpen(false);
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
   }, []);
 
   if (!mounted) {
@@ -60,10 +85,11 @@ export default function Navbar() {
 
   return (
     <motion.nav 
+      ref={navbarRef}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`fixed top-0 w-full flex justify-between items-center px-4 sm:px-6 md:px-12 py-4 z-50 transition-all duration-300 ${
+      className={`fixed top-0 w-full flex justify-between items-center px-4 sm:px-6 md:px-12 py-4 z-[60] transition-all duration-300 ${
         isScrolled 
           ? darkMode
             ? 'bg-gray-900/95 backdrop-blur-md shadow-lg border-b border-gray-700/20'
@@ -247,11 +273,12 @@ export default function Navbar() {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
+            ref={mobileMenuRef}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className={`absolute top-full left-0 right-0 mt-2 mx-4 rounded-xl shadow-xl border lg:hidden ${
+            className={`absolute top-full left-0 right-0 mt-2 mx-4 rounded-xl shadow-xl border lg:hidden z-[60] ${
               darkMode 
                 ? 'bg-gray-800/95 border-gray-700/50 backdrop-blur-md' 
                 : 'bg-white/95 border-gray-200/50 backdrop-blur-md'
@@ -275,6 +302,7 @@ export default function Navbar() {
             {/* Mobile Passions Dropdown */}
             <div className={`border-t ${darkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
               <button
+                ref={passionsButtonRef}
                 onClick={() => setIsPassionsOpen(!isPassionsOpen)}
                 className={`w-full flex items-center justify-between px-4 py-3 transition-colors ${
                   darkMode 
@@ -313,8 +341,8 @@ export default function Navbar() {
                         setIsMobileMenuOpen(false);
                       }}
                     >
-                      <span className="text-lg">✨</span>
-                      <span className="font-medium text-sm">Main Passions</span>
+                      <span className="text-lg"></span>
+                      <span className="font-medium text-sm">Passions Section</span>
                     </Link>
                     {passionPages.map((passion, index) => (
                       <Link
