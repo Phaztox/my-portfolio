@@ -1,6 +1,7 @@
 // components/Passions.tsx - SEAMLESS FLOW WITH LINKS
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const passions = [
   { 
@@ -34,54 +35,17 @@ const passions = [
 ];
 
 export default function Passions() {
+  const { darkMode } = useTheme();
+
   return (
     <section 
       id="passions" 
       className="section-container px-8 relative overflow-hidden"
-      style={{
-        background: `linear-gradient(135deg, 
-          #FEF3C7 0%, 
-          #F3E8FF 35%, 
-          #FDF2F8 70%,
-          #FEF3C7 100%)`
-      }}
     >
-      {/* Dark mode overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 opacity-0 dark:opacity-96 transition-opacity duration-700"></div>
       
-      {/* Floating background elements */}
-      <div className="absolute inset-0 opacity-20 dark:opacity-10">
-        <motion.div 
-          className="absolute top-0 left-1/4 w-32 h-32 rounded-full blur-xl"
-          style={{ backgroundColor: '#FFB347' }}
-          animate={{ 
-            y: [0, -30, 0],
-            x: [0, 20, 0],
-          }}
-          transition={{ 
-            duration: 12,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        <motion.div 
-          className="absolute bottom-1/4 right-1/4 w-48 h-48 rounded-full blur-xl"
-          style={{ backgroundColor: '#CBB3EE' }}
-          animate={{ 
-            y: [0, 30, 0],
-            x: [0, -15, 0],
-          }}
-          transition={{ 
-            duration: 15,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-      </div>
-
       <div className="max-w-4xl mx-auto relative z-10 w-full">
         <motion.h2 
-          className="text-4xl font-bold mb-12 text-center text-gray-900 dark:text-white"
+          className={`text-4xl font-bold mb-12 text-center ${darkMode ? 'text-white' : 'text-gray-900'}`}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.3 }}
@@ -94,9 +58,12 @@ export default function Passions() {
           {passions.map((passion, i) => (
             <Link key={i} href={passion.href}>
               <motion.div
-                className="group p-6 bg-white/70 dark:bg-slate-800/80 backdrop-blur-sm rounded-xl shadow-lg 
-                           hover:shadow-xl transition-all duration-300 border border-gray-200/50 dark:border-slate-600/30 
-                           cursor-pointer transform-gpu"
+                className={`group p-6 backdrop-blur-sm rounded-xl shadow-lg 
+                           hover:shadow-xl transition-all duration-300 cursor-pointer transform-gpu ${
+                  darkMode 
+                    ? 'bg-gray-800/70 border border-gray-700/60 hover:bg-gray-800/80' 
+                    : 'bg-white/80 border border-gray-200/60 hover:bg-white/90'
+                }`}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: false, amount: 0.3 }}
@@ -122,13 +89,21 @@ export default function Passions() {
                 >
                   {passion.icon}
                 </motion.div>
-                <h3 className="font-semibold text-xl mb-2 text-gray-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors">
+                <h3 className={`font-semibold text-xl mb-2 transition-colors ${
+                  darkMode 
+                    ? 'text-white group-hover:text-pink-400' 
+                    : 'text-gray-900 group-hover:text-pink-600'
+                }`}>
                   {passion.title}
                 </h3>
-                <p className="text-base text-gray-600 dark:text-gray-200 mb-4">
+                <p className={`text-base mb-4 ${darkMode ? 'text-gray-200' : 'text-gray-600'}`}>
                   {passion.desc}
                 </p>
-                <div className="flex items-center text-sm font-medium group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors">
+                <div className={`flex items-center text-sm font-medium transition-colors ${
+                  darkMode 
+                    ? 'group-hover:text-pink-400' 
+                    : 'group-hover:text-pink-600'
+                }`}>
                   <span>Explore more</span>
                   <motion.span 
                     className="ml-2"

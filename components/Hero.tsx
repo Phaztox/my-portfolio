@@ -1,7 +1,10 @@
 // components/Hero.tsx - SMOOTH SCROLL REVEAL
 import { motion } from "framer-motion";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function Hero() {
+  const { darkMode } = useTheme();
+
   return (
     <section id="hero" className="section-container justify-center text-center px-6 relative">
       <motion.div
@@ -11,7 +14,9 @@ export default function Hero() {
         className="relative z-10 max-w-4xl mx-auto"
       >
         <motion.h1 
-          className="text-4xl sm:text-6xl md:text-8xl font-extrabold mb-6 md:mb-8 leading-tight text-gray-900 dark:text-white"
+          className={`text-4xl sm:text-6xl md:text-8xl font-extrabold mb-6 md:mb-8 leading-tight ${
+            darkMode ? 'text-white' : 'text-gray-900'
+          }`}
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
@@ -20,7 +25,9 @@ export default function Hero() {
         </motion.h1>
         
         <motion.p 
-          className="text-lg sm:text-xl md:text-3xl mb-8 md:mb-12 text-gray-700 dark:text-gray-200 px-4 sm:px-0"
+          className={`text-lg sm:text-xl md:text-3xl mb-8 md:mb-12 px-4 sm:px-0 ${
+            darkMode ? 'text-gray-200' : 'text-gray-700'
+          }`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.6 }}
@@ -50,7 +57,9 @@ export default function Hero() {
           
           <motion.a
             href="#about"
-            className="px-6 sm:px-10 py-3 sm:py-4 bg-transparent border-2 border-orange-400 text-gray-800 dark:text-gray-200 rounded-xl hover:bg-orange-400 hover:text-white text-base sm:text-lg font-semibold transform transition-all duration-300"
+            className={`px-6 sm:px-10 py-3 sm:py-4 bg-transparent border-2 border-orange-400 rounded-xl hover:bg-orange-400 hover:text-white text-base sm:text-lg font-semibold transform transition-all duration-300 ${
+              darkMode ? 'text-gray-200' : 'text-gray-800'
+            }`}
             whileHover={{ 
               scale: 1.05,
               backgroundColor: '#FFB347',

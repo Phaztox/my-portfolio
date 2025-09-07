@@ -1,5 +1,6 @@
 // components/Resume.tsx - CASCADING TIMELINE
 import { motion } from "framer-motion";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const timeline = [
   { 
@@ -20,27 +21,41 @@ const timeline = [
 ];
 
 export default function Resume() {
+  const { darkMode } = useTheme();
+
   return (
     <section id="resume" className="section-container px-8 relative">
       <div className="max-w-5xl mx-auto relative z-10 w-full">
-        <h2 className="text-5xl font-bold mb-16 text-center text-gray-900 dark:text-white">
+        <h2 className={`text-5xl font-bold mb-16 text-center ${
+          darkMode ? 'text-white' : 'text-gray-900'
+        }`}>
           My Studies
         </h2>
         
-        <div className="relative border-l-4 border-pink-400 dark:border-purple-400 pl-12 space-y-16">
+        <div className={`relative border-l-4 pl-12 space-y-16 ${
+          darkMode ? 'border-purple-400' : 'border-pink-400'
+        }`}>
           {timeline.map((item, i) => (
             <div
               key={i}
               className="relative group"
             >
               <div
-                className="absolute -left-6 top-2 w-8 h-8 rounded-full border-4 border-white dark:border-slate-800"
+                className={`absolute -left-6 top-2 w-8 h-8 rounded-full border-4 ${
+                  darkMode ? 'border-gray-800' : 'border-white'
+                }`}
                 style={{ backgroundColor: '#F7A8B8' }}
               />
               
-              <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-lg rounded-2xl p-8 border border-gray-200/50 dark:border-slate-600/30 shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:-translate-y-2 relative">
+              <div className={`backdrop-blur-lg rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:-translate-y-2 relative ${
+                darkMode 
+                  ? 'bg-gray-800/70 border border-gray-700/60' 
+                  : 'bg-white/80 border border-gray-200/60'
+              }`}>
                 <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white leading-tight flex-1 pr-6">
+                  <h3 className={`text-xl font-bold leading-tight flex-1 pr-6 ${
+                    darkMode ? 'text-white' : 'text-gray-900'
+                  }`}>
                     {item.title}
                   </h3>
                   <span 
@@ -50,7 +65,9 @@ export default function Resume() {
                     {item.year}
                   </span>
                 </div>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed mt-8">
+                <p className={`leading-relaxed mt-8 ${
+                  darkMode ? 'text-gray-200' : 'text-gray-600'
+                }`}>
                   {item.description}
                 </p>
               </div>

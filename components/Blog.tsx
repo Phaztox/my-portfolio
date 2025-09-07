@@ -1,25 +1,20 @@
 // components/Blog.tsx - SMOOTH TRANSITIONS
 import { motion } from "framer-motion";
+import Link from "next/link";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function Blog() {
+  const { darkMode } = useTheme();
+
   return (
     <section 
       id="blog" 
       className="section-container px-8 relative overflow-hidden"
-      style={{
-        background: `linear-gradient(135deg, 
-          #F3E8FF 0%, 
-          #FDF2F8 35%, 
-          #FEF3C7 70%,
-          #F3E8FF 100%)`
-      }}
     >
-      {/* Dark mode overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 opacity-0 dark:opacity-96 transition-opacity duration-700"></div>
       
       <div className="max-w-4xl mx-auto relative z-10 w-full">
         <motion.h2 
-          className="text-4xl font-bold mb-12 text-center text-gray-900 dark:text-white"
+          className={`text-4xl font-bold mb-12 text-center ${darkMode ? 'text-white' : 'text-gray-900'}`}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.3 }}
@@ -29,26 +24,58 @@ export default function Blog() {
         </motion.h2>
         <div className="space-y-6">
           <motion.article 
-            className="bg-white/70 dark:bg-slate-800/80 backdrop-blur-sm rounded-xl p-6 border border-gray-200/50 dark:border-slate-600/30 shadow-lg hover:shadow-xl transition-shadow duration-300"
+            className={`backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 ${
+              darkMode 
+                ? 'bg-gray-800/70 border border-gray-700/60' 
+                : 'bg-white/80 border border-gray-200/60'
+            }`}
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: false, amount: 0.3 }}
             transition={{ duration: 0.4 }}
           >
-            <h3 className="font-semibold text-xl mb-2 text-gray-900 dark:text-white">Exploring AI Bias in Datasets</h3>
-            <p className="text-lg text-gray-700 dark:text-gray-100 leading-relaxed">
-              A reflection on fairness and ethics in AI.
-            </p>
+            <Link href="/blog/the-compressed-truth" className="block group">
+              <h3 className={`font-semibold text-xl mb-2 transition-colors duration-200 ${
+                darkMode 
+                  ? 'text-white group-hover:text-purple-400' 
+                  : 'text-gray-900 group-hover:text-purple-600'
+              }`}>
+                The Compressed Truth: Unpacking My Fascination with Video Codecs & Quality
+              </h3>
+              <p className={`text-lg leading-relaxed ${darkMode ? 'text-gray-100' : 'text-gray-700'}`}>
+                How my hobby for creating cool video edits unexpectedly led me down a rabbit hole into the hidden magic and clever science behind making visuals look amazing without hogging all your storage.
+              </p>
+            </Link>
           </motion.article>
           <motion.article 
-            className="bg-white/70 dark:bg-slate-800/80 backdrop-blur-sm rounded-xl p-6 border border-gray-200/50 dark:border-slate-600/30 shadow-lg hover:shadow-xl transition-shadow duration-300"
+            className={`backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 ${
+              darkMode 
+                ? 'bg-gray-800/70 border border-gray-700/60' 
+                : 'bg-white/80 border border-gray-200/60'
+            }`}
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: false, amount: 0.3 }}
             transition={{ duration: 0.4, delay: 0.2 }}
           >
-            <h3 className="font-semibold text-xl mb-2 text-gray-900 dark:text-white">Optimizing Algorithms with Python</h3>
-            <p className="text-lg text-gray-700 dark:text-gray-100 leading-relaxed">
+            <h3 className={`font-semibold text-xl mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Exploring AI Bias in Datasets</h3>
+            <p className={`text-lg leading-relaxed ${darkMode ? 'text-gray-100' : 'text-gray-700'}`}>
+              A reflection on fairness and ethics in AI.
+            </p>
+          </motion.article>
+          <motion.article 
+            className={`backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 ${
+              darkMode 
+                ? 'bg-gray-800/70 border border-gray-700/60' 
+                : 'bg-white/80 border border-gray-200/60'
+            }`}
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: false, amount: 0.3 }}
+            transition={{ duration: 0.4, delay: 0.4 }}
+          >
+            <h3 className={`font-semibold text-xl mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Optimizing Algorithms with Python</h3>
+            <p className={`text-lg leading-relaxed ${darkMode ? 'text-gray-100' : 'text-gray-700'}`}>
               Techniques for performance and scalability.
             </p>
           </motion.article>

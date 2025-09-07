@@ -1,5 +1,6 @@
 // components/Projects.tsx - STAGGERED GRID REVEAL
 import { motion, easeOut } from "framer-motion";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const projects = [
   { 
@@ -25,6 +26,8 @@ const projects = [
 ];
 
 export default function Projects() {
+  const { darkMode } = useTheme();
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -62,7 +65,9 @@ export default function Projects() {
         transition={{ duration: 0.8, ease: easeOut }}
       >
         <motion.h2 
-          className="text-3xl sm:text-4xl md:text-5xl font-bold mb-8 md:mb-16 text-center text-gray-900 dark:text-white"
+          className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-8 md:mb-16 text-center ${
+            darkMode ? 'text-white' : 'text-gray-900'
+          }`}
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -80,7 +85,11 @@ export default function Projects() {
             <motion.div
               key={i}
               variants={itemVariants}
-              className="group relative bg-white/70 dark:bg-slate-800/70 backdrop-blur-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200/50 dark:border-slate-600/30"
+              className={`group relative backdrop-blur-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden ${
+                darkMode 
+                  ? 'bg-gray-800/70 border border-gray-700/60' 
+                  : 'bg-white/80 border border-gray-200/60'
+              }`}
               whileHover={{ 
                 y: -10, 
                 scale: 1.02,
@@ -111,10 +120,16 @@ export default function Projects() {
               </motion.div>
               
               <div className="p-4 sm:p-6 md:p-8">
-                <h3 className="font-bold text-lg sm:text-xl md:text-2xl mb-3 md:mb-4 text-gray-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors">
+                <h3 className={`font-bold text-lg sm:text-xl md:text-2xl mb-3 md:mb-4 transition-colors ${
+                  darkMode 
+                    ? 'text-white group-hover:text-pink-400' 
+                    : 'text-gray-900 group-hover:text-pink-600'
+                }`}>
                   {project.title}
                 </h3>
-                <p className="text-sm sm:text-base md:text-lg mb-4 md:mb-6 text-gray-600 dark:text-gray-300 leading-relaxed">
+                <p className={`text-sm sm:text-base md:text-lg mb-4 md:mb-6 leading-relaxed ${
+                  darkMode ? 'text-gray-200' : 'text-gray-600'
+                }`}>
                   {project.desc}
                 </p>
                 
@@ -122,7 +137,11 @@ export default function Projects() {
                   {project.tech.map((tech, techI) => (
                     <span 
                       key={techI}
-                      className="px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-full bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300"
+                      className={`px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-full ${
+                        darkMode 
+                          ? 'bg-gray-700 text-gray-200' 
+                          : 'bg-gray-200 text-gray-700'
+                      }`}
                     >
                       {tech}
                     </span>

@@ -1,6 +1,7 @@
 // pages/index.tsx - SINGLE SCROLLING EXPERIENCE
 import { useEffect } from 'react';
 import { useSectionScroll } from '@/hooks/useSectionScroll';
+import { useTheme } from "@/contexts/ThemeContext";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -14,6 +15,7 @@ import ScrollHint from "@/components/ScrollHint";
 
 export default function Home() {
   const { currentSection, sections, scrollToSection, isScrolling, isMobile } = useSectionScroll();
+  const { darkMode } = useTheme();
 
   useEffect(() => {
     // Disable default scroll behavior for the smooth section scrolling on desktop
@@ -35,50 +37,60 @@ export default function Home() {
   }, [isMobile]);
 
   return (
-    <div 
-      className="min-h-screen relative"
-      style={{
-        background: `
-          radial-gradient(circle at 20% 30%, rgba(247, 168, 184, 0.3) 0%, transparent 50%),
-          radial-gradient(circle at 80% 70%, rgba(203, 179, 238, 0.3) 0%, transparent 50%),
-          radial-gradient(circle at 60% 10%, rgba(255, 179, 71, 0.2) 0%, transparent 50%),
-          linear-gradient(135deg, 
-            #FDF2F8 0%, 
-            #FEF3C7 25%, 
-            #F3E8FF 50%, 
-            #FDF2F8 75%, 
-            #FEF3C7 100%
-          )
-        `
-      }}
-    >
-      {/* Dark mode overlay for entire page */}
-      <div className="fixed inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 opacity-0 dark:opacity-96 transition-opacity duration-1000 pointer-events-none z-0"></div>
-      
+    <div className={`min-h-screen relative transition-all duration-300 ${
+      darkMode ? 'bg-gradient-to-br from-gray-900 via-purple-900/30 to-indigo-900/30' : 'bg-gradient-to-br from-purple-100 via-pink-100 to-indigo-200'
+    }`}>
       {/* Floating background elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div 
-          className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-20 dark:opacity-10 animate-float"
+          className={`absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl transition-opacity duration-1000 animate-float ${
+            darkMode ? 'opacity-8' : 'opacity-25'
+          }`}
           style={{ 
-            backgroundColor: '#F7A8B8',
+            backgroundColor: darkMode ? '#7c3aed' : '#F7A8B8',
             animationDelay: '0s',
             animationDuration: '20s'
           }}
         />
         <div 
-          className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-3xl opacity-25 dark:opacity-12 animate-float"
+          className={`absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-3xl transition-opacity duration-1000 animate-float ${
+            darkMode ? 'opacity-10' : 'opacity-30'
+          }`}
           style={{ 
-            backgroundColor: '#CBB3EE',
+            backgroundColor: darkMode ? '#ec4899' : '#CBB3EE',
             animationDelay: '7s',
             animationDuration: '25s'
           }}
         />
         <div 
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full blur-2xl opacity-15 dark:opacity-8 animate-float"
+          className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full blur-2xl transition-opacity duration-1000 animate-float ${
+            darkMode ? 'opacity-6' : 'opacity-20'
+          }`}
           style={{ 
-            backgroundColor: '#FFB347',
+            backgroundColor: darkMode ? '#f59e0b' : '#FFB347',
             animationDelay: '14s',
             animationDuration: '18s'
+          }}
+        />
+        {/* Additional floating elements for better coverage */}
+        <div 
+          className={`absolute top-3/4 left-1/6 w-72 h-72 rounded-full blur-3xl transition-opacity duration-1000 animate-float ${
+            darkMode ? 'opacity-5' : 'opacity-18'
+          }`}
+          style={{ 
+            backgroundColor: darkMode ? '#06b6d4' : '#87CEEB',
+            animationDelay: '21s',
+            animationDuration: '22s'
+          }}
+        />
+        <div 
+          className={`absolute top-1/6 right-1/6 w-56 h-56 rounded-full blur-2xl transition-opacity duration-1000 animate-float ${
+            darkMode ? 'opacity-7' : 'opacity-22'
+          }`}
+          style={{ 
+            backgroundColor: darkMode ? '#10b981' : '#98FB98',
+            animationDelay: '10s',
+            animationDuration: '26s'
           }}
         />
       </div>
