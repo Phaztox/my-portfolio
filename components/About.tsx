@@ -1,5 +1,4 @@
 // components/About.tsx - SLIDE FROM BOTTOM
-import { motion } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
 
 export default function About() {

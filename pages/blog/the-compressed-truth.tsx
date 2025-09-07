@@ -23,9 +23,9 @@ export default function TheCompressedTruth() {
       
       // Add additional inline styles for desktop scrollbar hiding
       document.documentElement.style.scrollbarWidth = 'none';
-      (document.documentElement.style as any).msOverflowStyle = 'none';
+      (document.documentElement.style as unknown as Record<string, string>).msOverflowStyle = 'none';
       document.body.style.scrollbarWidth = 'none';
-      (document.body.style as any).msOverflowStyle = 'none';
+      (document.body.style as unknown as Record<string, string>).msOverflowStyle = 'none';
       
       // Add webkit scrollbar hiding
       const style = document.createElement('style');
@@ -49,9 +49,9 @@ export default function TheCompressedTruth() {
       document.body.removeAttribute('data-hide-scrollbar');
       document.documentElement.removeAttribute('data-hide-scrollbar');
       document.documentElement.style.scrollbarWidth = '';
-      (document.documentElement.style as any).msOverflowStyle = '';
+      (document.documentElement.style as unknown as Record<string, string>).msOverflowStyle = '';
       document.body.style.scrollbarWidth = '';
-      (document.body.style as any).msOverflowStyle = '';
+      (document.body.style as unknown as Record<string, string>).msOverflowStyle = '';
       console.log('Blog page: Cleanup');
     };
   }, [darkMode]);
@@ -166,11 +166,11 @@ export default function TheCompressedTruth() {
                     ? 'text-gray-300 first-letter:text-purple-400' 
                     : 'text-gray-700 first-letter:text-purple-600'
                 }`}>
-                  There's a distinct satisfaction in taking raw video footage or a static image and, through focused effort, transforming it into a cohesive visual piece. My YouTube channel, primarily a personal archive for various project realizations, became an outlet for this. What began as a simple intent to "store" videos evolved. A natural progression led to crafting thumbnails, and subsequently, incorporating basic edits with music and transitions. Having experienced the enhanced presentation, it became a standard I felt compelled to maintain for subsequent videos. This process, while primarily for personal enjoyment and a small circle of friends, became a hobby where the pursuit of clean, well-presented results offered its own reward.
+                  There&apos;s a distinct satisfaction in taking raw video footage or a static image and, through focused effort, transforming it into a cohesive visual piece. My YouTube channel, primarily a personal archive for various project realizations, became an outlet for this. What began as a simple intent to &ldquo;store&rdquo; videos evolved. A natural progression led to crafting thumbnails, and subsequently, incorporating basic edits with music and transitions. Having experienced the enhanced presentation, it became a standard I felt compelled to maintain for subsequent videos. This process, while primarily for personal enjoyment and a small circle of friends, became a hobby where the pursuit of clean, well-presented results offered its own reward.
                 </p>
                 
                 <p className={`text-lg leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  This interest naturally extended to <strong className={`font-bold ${darkMode ? 'text-pink-300' : 'text-pink-600'}`}>"anime edits,"</strong> a genre that bridges another personal interest. The technical aspects of dynamically synchronizing cuts, effects, and music to enhance existing media intrigued me. While my recent focus has shifted, the <strong className={`font-bold ${darkMode ? 'text-indigo-300' : 'text-indigo-600'}`}>technical underpinnings</strong> of such detailed visual work continued to hold my attention.
+                  This interest naturally extended to <strong className={`font-bold ${darkMode ? 'text-pink-300' : 'text-pink-600'}`}>&ldquo;anime edits,&rdquo;</strong> a genre that bridges another personal interest. The technical aspects of dynamically synchronizing cuts, effects, and music to enhance existing media intrigued me. While my recent focus has shifted, the <strong className={`font-bold ${darkMode ? 'text-indigo-300' : 'text-indigo-600'}`}>technical underpinnings</strong> of such detailed visual work continued to hold my attention.
                 </p>
               </motion.div>
 

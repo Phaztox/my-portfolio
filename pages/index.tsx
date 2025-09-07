@@ -14,7 +14,7 @@ import SectionIndicator from "@/components/SectionIndicator";
 import ScrollHint from "@/components/ScrollHint";
 
 export default function Home() {
-  const { currentSection, sections, scrollToSection, isScrolling, isMobile } = useSectionScroll();
+  const { currentSection, sections, scrollToSection, isMobile } = useSectionScroll();
   const { darkMode } = useTheme();
 
   useEffect(() => {

@@ -60,7 +60,7 @@ export default function App({ Component, pageProps }: AppProps) {
       let scrollTimeout: NodeJS.Timeout;
       let currentScrollElement: Element | Window | null = null;
       
-      const handleScroll = (event?: Event) => {
+      const handleScroll = () => {
         // Add scrolling class to show custom scrollbar
         document.body.classList.add('scrolling');
         
@@ -118,7 +118,7 @@ export default function App({ Component, pageProps }: AppProps) {
       // Store scroll positions for different routes
       const scrollPositions = new Map<string, number>();
       
-      const handleRouteChangeStart = (url: string) => {
+      const handleRouteChangeStart = () => {
         // Save current scroll position
         let scrollTop = 0;
         const scrollableContainer = document.querySelector('.min-h-screen.overflow-y-auto');

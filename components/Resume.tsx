@@ -1,5 +1,4 @@
 // components/Resume.tsx - CASCADING TIMELINE
-import { motion } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
 
 const timeline = [
