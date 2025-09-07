@@ -2,12 +2,24 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useEffect } from "react";
 
 export default function TheCompressedTruth() {
   const { darkMode, toggleTheme } = useTheme();
 
+  // Ensure scrolling is enabled on this page
+  useEffect(() => {
+    document.body.style.overflow = 'auto';
+    document.documentElement.style.overflow = 'auto';
+    document.documentElement.style.scrollBehavior = 'smooth';
+    
+    return () => {
+      // Cleanup is handled by the main page's useEffect when navigating back
+    };
+  }, []);
+
   return (
-    <div className={`min-h-screen transition-all duration-300 ${
+    <div className={`min-h-screen overflow-y-auto transition-all duration-300 ${
       darkMode ? 'bg-gradient-to-br from-gray-900 via-purple-950/20 to-indigo-950/20' : 'bg-gradient-to-br from-purple-50 to-indigo-100'
     }`}>
       {/* Navigation */}
