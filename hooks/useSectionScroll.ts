@@ -6,6 +6,9 @@ export const useSectionScroll = () => {
   const [isScrolling, setIsScrolling] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isScrollingRef = useRef(false); // Add ref to track scrolling state
+  const scrollEndTimeoutRef = useRef<NodeJS.Timeout | null>(null); // Additional timeout for scroll completion
+  const isProgrammaticScrollRef = useRef(false); // Track only programmatic scrolls (dot clicks)
 
   const sections = [
     'hero',
@@ -33,16 +36,30 @@ export const useSectionScroll = () => {
     
     const element = document.getElementById(sections[index]);
     if (element) {
+      // Clear any existing timeouts
+      if (scrollEndTimeoutRef.current) {
+        clearTimeout(scrollEndTimeoutRef.current);
+      }
+      
       setIsScrolling(true);
+      isScrollingRef.current = true; // Block wheel scrolling on desktop
+      isProgrammaticScrollRef.current = true; // Block intersection observer for cascade prevention
+      
       element.scrollIntoView({ 
         behavior: 'smooth',
         block: 'start'
       });
       
-      // Reset scrolling state after animation
+      // Shorter timeout for wheel scrolling (800ms)
       setTimeout(() => {
         setIsScrolling(false);
-      }, 1000);
+        isScrollingRef.current = false;
+      }, 800);
+      
+      // Longer timeout only for intersection observer blocking (1.5 seconds)
+      scrollEndTimeoutRef.current = setTimeout(() => {
+        isProgrammaticScrollRef.current = false;
+      }, 1500);
     }
   };
 
@@ -144,12 +161,18 @@ export const useSectionScroll = () => {
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
       }
+      if (scrollEndTimeoutRef.current) {
+        clearTimeout(scrollEndTimeoutRef.current);
+      }
     };
   }, [currentSection, isScrolling]);
 
   // Detect current section on manual scroll (for navigation clicks and mobile)
   useEffect(() => {
     const handleIntersection = (entries: IntersectionObserverEntry[]) => {
+      // Only block intersection updates during programmatic dot clicks, not during wheel scrolling
+      if (isProgrammaticScrollRef.current) return;
+      
       // Find the entry with the highest intersection ratio
       let mostVisibleEntry = null as IntersectionObserverEntry | null;
       let highestRatio = 0;
@@ -192,7 +215,9 @@ export const useSectionScroll = () => {
     currentSection,
     sections,
     scrollToSection: (index: number) => {
+      // Immediately set the target section to prevent any intermediate highlighting
       setCurrentSection(index);
+      isProgrammaticScrollRef.current = true; // Block intersection observer immediately for dot clicks
       scrollToSection(index);
     },
     isScrolling,
