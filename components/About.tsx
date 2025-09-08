@@ -7,18 +7,18 @@ export default function About() {
   return (
     <section id="about" className="section-container px-4 sm:px-8 relative">
       <div className="max-w-5xl mx-auto text-center relative z-10 w-full">
-        <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-8 md:mb-12 ${
+        <h2 className={`text-responsive-heading font-bold mb-6 md:mb-8 ${
           darkMode ? 'text-white' : 'text-gray-900'
         }`}>
           About Me
         </h2>
         
-        <div className={`backdrop-blur-lg rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-12 shadow-2xl ${
+        <div className={`backdrop-blur-lg responsive-card-radius responsive-card-padding shadow-2xl ${
           darkMode 
             ? 'bg-gray-800/70 border border-gray-700/60' 
             : 'bg-white/80 border border-gray-200/60'
         }`}>
-          <p className={`text-base sm:text-lg md:text-xl leading-relaxed ${
+          <p className={`text-responsive-about ${
             darkMode ? 'text-gray-100' : 'text-gray-700'
           }`}>
             I'm Antonin Gabet, an informatics student driven by a profound passion for Data & Artificial Intelligence. 

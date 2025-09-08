@@ -6,7 +6,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 const passions = [
   { 
     title: "Gaming", 
-    desc: "Gaming is my ultimate arena for min-maxing builds and dominating the meta with a programming-driven mindset. The thrill is flawlessly executing meticulously engineered strategies.", 
+    desc: "Gaming is my ultimate arena for min-maxing builds and dominating the meta with a programming-driven mindset. The thrill is flawlessly executing engineered strategies.", 
     icon: "🎮", 
     color: "#F7A8B8",
     href: "/passions/gaming"
@@ -45,7 +45,7 @@ export default function Passions() {
       
       <div className="max-w-4xl mx-auto relative z-10 w-full">
         <motion.h2 
-          className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-8 md:mb-12 text-center ${darkMode ? 'text-white' : 'text-gray-900'}`}
+          className={`text-responsive-heading font-bold mb-6 md:mb-8 text-center ${darkMode ? 'text-white' : 'text-gray-900'}`}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.3 }}
@@ -54,11 +54,11 @@ export default function Passions() {
           Passions
         </motion.h2>
         
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 passion-grid-gap">
           {passions.map((passion, i) => (
             <Link key={i} href={passion.href}>
               <motion.div
-                className={`group p-6 backdrop-blur-sm rounded-xl shadow-lg 
+                className={`group passion-card-padding backdrop-blur-sm responsive-card-radius shadow-lg 
                            hover:shadow-xl transition-all duration-300 cursor-pointer transform-gpu ${
                   darkMode 
                     ? 'bg-gray-800/70 border border-gray-700/60 hover:bg-gray-800/80' 
@@ -79,8 +79,12 @@ export default function Passions() {
                 }}
               >
                 <motion.div 
-                  className="w-12 h-12 rounded-full flex items-center justify-center mb-4 text-white text-xl"
-                  style={{ backgroundColor: passion.color }}
+                  className="responsive-card-radius flex items-center justify-center mb-3 text-white responsive-icon-size"
+                  style={{ 
+                    backgroundColor: passion.color,
+                    width: `clamp(2rem, min(3.5vw, 4vh), 3rem)`,
+                    height: `clamp(2rem, min(3.5vw, 4vh), 3rem)`
+                  }}
                   whileHover={{ 
                     rotate: 15,
                     scale: 1.1,
@@ -89,17 +93,17 @@ export default function Passions() {
                 >
                   {passion.icon}
                 </motion.div>
-                <h3 className={`font-semibold text-xl mb-2 transition-colors ${
+                <h3 className={`font-semibold text-responsive-card-title mb-2 transition-colors ${
                   darkMode 
                     ? 'text-white group-hover:text-pink-400' 
                     : 'text-gray-900 group-hover:text-pink-600'
                 }`}>
                   {passion.title}
                 </h3>
-                <p className={`text-base mb-4 ${darkMode ? 'text-gray-200' : 'text-gray-600'}`}>
+                <p className={`text-responsive-card mb-3 opacity-90 ${darkMode ? 'text-gray-200' : 'text-gray-600'}`}>
                   {passion.desc}
                 </p>
-                <div className={`flex items-center text-sm font-medium transition-colors ${
+                <div className={`flex items-center responsive-badge-text font-medium transition-colors ${
                   darkMode 
                     ? 'group-hover:text-pink-400' 
                     : 'group-hover:text-pink-600'

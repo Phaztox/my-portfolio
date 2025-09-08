@@ -12,7 +12,7 @@ export default function Contact() {
         transition={{ duration: 1.2, ease: "easeOut" }}
       >
         <motion.h2 
-          className="text-5xl font-bold mb-12 text-gray-900 dark:text-white"
+          className="text-responsive-heading font-bold mb-12 text-gray-900 dark:text-white"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.3 }}
@@ -22,7 +22,7 @@ export default function Contact() {
         </motion.h2>
         
         <motion.div
-          className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-lg rounded-3xl p-12 border border-gray-200/30 dark:border-slate-600/30 shadow-2xl"
+          className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-lg responsive-card-radius responsive-card-padding border border-gray-200/30 dark:border-slate-600/30 shadow-2xl"
           initial={{ opacity: 0, y: 100 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -38,30 +38,30 @@ export default function Contact() {
             <input
               type="text"
               placeholder="Your Name"
-              className="w-full p-4 border border-gray-300 dark:border-slate-600 rounded-xl 
+              className="w-full responsive-button-padding border border-gray-300 dark:border-slate-600 responsive-card-radius 
                          bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm
-                         focus:ring-4 focus:ring-pink-400/50 outline-none transition-all duration-300 text-lg 
+                         focus:ring-4 focus:ring-pink-400/50 outline-none transition-all duration-300 text-responsive-body 
                          text-gray-800 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-300"
             />
             <input
               type="email"
               placeholder="Your Email"
-              className="w-full p-4 border border-gray-300 dark:border-slate-600 rounded-xl 
+              className="w-full responsive-button-padding border border-gray-300 dark:border-slate-600 responsive-card-radius 
                          bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm
-                         focus:ring-4 focus:ring-pink-400/50 outline-none transition-all duration-300 text-lg 
+                         focus:ring-4 focus:ring-pink-400/50 outline-none transition-all duration-300 text-responsive-body 
                          text-gray-800 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-300"
             />
             <textarea
               placeholder="Your Message"
-              className="w-full p-4 border border-gray-300 dark:border-slate-600 rounded-xl 
+              className="w-full responsive-button-padding border border-gray-300 dark:border-slate-600 responsive-card-radius 
                          bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm
-                         focus:ring-4 focus:ring-pink-400/50 outline-none transition-all duration-300 text-lg 
+                         focus:ring-4 focus:ring-pink-400/50 outline-none transition-all duration-300 text-responsive-body 
                          text-gray-800 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-300"
               rows={6}
             />
             <motion.button
               type="submit"
-              className="w-full px-8 py-4 text-white rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 text-xl font-bold"
+              className="w-full responsive-button-padding text-white responsive-card-radius shadow-xl hover:shadow-2xl transition-all duration-300 text-responsive-body font-bold"
               style={{ backgroundColor: '#F7A8B8' }}
               whileHover={{ 
                 scale: 1.02,
@@ -75,7 +75,7 @@ export default function Contact() {
           </motion.form>
           
           <motion.div 
-            className="mt-12 flex justify-center gap-8 text-xl"
+            className="mt-12 flex justify-center gap-8 text-responsive-body"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

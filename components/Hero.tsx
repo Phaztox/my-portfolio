@@ -14,7 +14,7 @@ export default function Hero() {
         className="relative z-10 max-w-4xl mx-auto"
       >
         <motion.h1 
-          className={`text-4xl sm:text-6xl md:text-8xl font-extrabold mb-6 md:mb-8 leading-tight ${
+          className={`text-responsive-hero font-extrabold mb-6 md:mb-8 ${
             darkMode ? 'text-white' : 'text-gray-900'
           }`}
           initial={{ opacity: 0, y: 50 }}
@@ -25,7 +25,7 @@ export default function Hero() {
         </motion.h1>
         
         <motion.p 
-          className={`text-lg sm:text-xl md:text-3xl mb-8 md:mb-12 px-4 sm:px-0 ${
+          className={`text-responsive-subtitle mb-8 md:mb-12 responsive-section-padding ${
             darkMode ? 'text-gray-200' : 'text-gray-700'
           }`}
           initial={{ opacity: 0 }}
@@ -36,14 +36,14 @@ export default function Hero() {
         </motion.p>
         
         <motion.div 
-          className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center px-4 sm:px-0"
+          className="flex flex-col sm:flex-row responsive-button-gap justify-center responsive-section-padding"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.9 }}
         >
           <motion.a
             href="https://raw.githubusercontent.com/Phaztox/my-portfolio/master/files/CV_Antonin_Lechen_GABET_EN.pdf"
-            className="px-6 sm:px-10 py-3 sm:py-4 text-white rounded-xl shadow-xl hover:shadow-2xl text-base sm:text-lg font-semibold transform transition-all duration-300"
+            className="responsive-button-padding text-white responsive-card-radius shadow-xl hover:shadow-2xl text-responsive-body font-semibold transform transition-all duration-300"
             style={{ backgroundColor: '#F7A8B8' }}
             whileHover={{ 
               scale: 1.05, 
@@ -57,7 +57,7 @@ export default function Hero() {
           
           <motion.a
             href="#about"
-            className={`px-6 sm:px-10 py-3 sm:py-4 bg-transparent border-2 border-orange-400 rounded-xl hover:bg-orange-400 hover:text-white text-base sm:text-lg font-semibold transform transition-all duration-300 ${
+            className={`responsive-button-padding bg-transparent border-2 border-orange-400 responsive-card-radius hover:bg-orange-400 hover:text-white text-responsive-body font-semibold transform transition-all duration-300 ${
               darkMode ? 'text-gray-200' : 'text-gray-800'
             }`}
             whileHover={{ 
