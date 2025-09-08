@@ -9,6 +9,8 @@ export const useSectionScroll = () => {
   const isScrollingRef = useRef(false); // Add ref to track scrolling state
   const scrollEndTimeoutRef = useRef<NodeJS.Timeout | null>(null); // Additional timeout for scroll completion
   const isProgrammaticScrollRef = useRef(false); // Track only programmatic scrolls (dot clicks)
+  const scrollAccumulator = useRef<number>(0); // Accumulate scroll delta
+  const scrollProcessingRef = useRef<boolean>(false); // Flag to prevent processing during accumulation
 
   const sections = [
     'hero',
@@ -22,7 +24,13 @@ export const useSectionScroll = () => {
   // Check if device is mobile
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
+      // More precise mobile detection - check for actual mobile user agents
+      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isSmallScreen = window.innerWidth < 768;
+      
+      // Only consider it mobile if it's both a mobile device AND has a small screen
+      // This prevents laptops with touchscreens from being classified as mobile
+      setIsMobile(isMobileDevice && isSmallScreen);
     };
     
     checkMobile();
@@ -64,37 +72,50 @@ export const useSectionScroll = () => {
   };
 
   const handleScroll = (event: WheelEvent) => {
-    // Disable section scroll on mobile devices
-    if (isMobile || isScrolling) {
+    // Disable section scroll on mobile devices or if already scrolling
+    if (isMobile || isScrolling || isScrollingRef.current || scrollProcessingRef.current) {
       return;
     }
 
     event.preventDefault();
     event.stopPropagation();
     
-    // Clear existing timeout
+    const delta = event.deltaY;
+    
+    // Accumulate scroll delta to handle fast/momentum scrolling
+    scrollAccumulator.current += delta;
+    
+    // Start processing this scroll gesture
+    scrollProcessingRef.current = true;
+    
+    // Clear any existing timeout
     if (scrollTimeoutRef.current) {
       clearTimeout(scrollTimeoutRef.current);
     }
-
-    // Set a small delay to prevent multiple rapid scrolls
+    
+    // Wait for scroll momentum to settle (150ms - longer to catch all momentum events)
     scrollTimeoutRef.current = setTimeout(() => {
-      const delta = event.deltaY;
+      const totalDelta = scrollAccumulator.current;
       
-      if (Math.abs(delta) > 10) { // Only trigger on significant scroll
-        if (delta > 0 && currentSection < sections.length - 1) {
-          // Scroll down
+      // Reset accumulator and processing flag
+      scrollAccumulator.current = 0;
+      scrollProcessingRef.current = false;
+      
+      // Only trigger scroll if we have significant accumulated delta
+      if (Math.abs(totalDelta) > 10) {
+        if (totalDelta > 0 && currentSection < sections.length - 1) {
+          // Scroll down (trackpad swipe up)
           const nextSection = currentSection + 1;
           setCurrentSection(nextSection);
           scrollToSection(nextSection);
-        } else if (delta < 0 && currentSection > 0) {
-          // Scroll up
+        } else if (totalDelta < 0 && currentSection > 0) {
+          // Scroll up (trackpad swipe down)
           const prevSection = currentSection - 1;
           setCurrentSection(prevSection);
           scrollToSection(prevSection);
         }
       }
-    }, 50);
+    }, 150);
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
@@ -133,7 +154,7 @@ export const useSectionScroll = () => {
   };
 
   useEffect(() => {
-    // Only add wheel listener on desktop
+    // Only add wheel listeners on desktop
     if (!isMobile) {
       const handleWheel = (e: WheelEvent) => handleScroll(e);
       
