@@ -2,7 +2,11 @@
 import { motion } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
 
-export default function Hero() {
+interface HeroProps {
+  scrollToSection?: (index: number) => void;
+}
+
+export default function Hero({ scrollToSection }: HeroProps) {
   const { darkMode } = useTheme();
 
   return (
@@ -55,9 +59,9 @@ export default function Hero() {
             Download CV
           </motion.a>
           
-          <motion.a
-            href="#about"
-            className={`responsive-button-padding bg-transparent border-2 border-orange-400 responsive-card-radius hover:bg-orange-400 hover:text-white text-responsive-body font-semibold transform transition-all duration-300 ${
+          <motion.button
+            onClick={() => scrollToSection && scrollToSection(1)} // About section is index 1
+            className={`responsive-button-padding bg-transparent border-2 border-orange-400 responsive-card-radius hover:bg-orange-400 hover:text-white text-responsive-body font-semibold transform transition-all duration-300 cursor-pointer ${
               darkMode ? 'text-gray-200' : 'text-gray-800'
             }`}
             whileHover={{ 
@@ -68,7 +72,7 @@ export default function Hero() {
             whileTap={{ scale: 0.95 }}
           >
             Explore Journey
-          </motion.a>
+          </motion.button>
         </motion.div>
       </motion.div>
     </section>

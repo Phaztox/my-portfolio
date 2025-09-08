@@ -99,7 +99,7 @@ export default function Home() {
         />
       </div>
       
-      <Navbar />
+      <Navbar scrollToSection={scrollToSection} sections={sections} />
       
       {/* Section Navigation Indicator */}
       <SectionIndicator 
@@ -113,7 +113,7 @@ export default function Home() {
       
       {/* Scrolling sections */}
       <div className="relative z-10 pb-20"> {/* Add padding for footer */}
-        <Hero />
+        <Hero scrollToSection={scrollToSection} />
         <About />
         <Resume />
         <Projects />

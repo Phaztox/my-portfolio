@@ -4,7 +4,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
 import Link from "next/link";
 
-export default function Navbar() {
+interface NavbarProps {
+  scrollToSection?: (index: number) => void;
+  sections?: string[];
+}
+
+export default function Navbar({ scrollToSection, sections }: NavbarProps) {
   const { darkMode, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -71,9 +76,9 @@ export default function Navbar() {
   }
 
   const links = [
-    { href: "#about", label: "About Me" },
-    { href: "#resume", label: "Studies" },
-    { href: "#projects", label: "Projects" },
+    { href: "#about", label: "About Me", sectionIndex: 1 },
+    { href: "#resume", label: "Studies", sectionIndex: 2 },
+    { href: "#projects", label: "Projects", sectionIndex: 3 },
   ];
 
   const passionPages = [
@@ -99,24 +104,24 @@ export default function Navbar() {
             : 'bg-white/10 backdrop-blur-sm'
       }`}
     >
-      <motion.a 
-        href="#hero" 
-        className={`font-bold text-xl sm:text-2xl transition-colors ${
+      <motion.button 
+        onClick={() => scrollToSection && scrollToSection(0)}
+        className={`font-bold text-xl sm:text-2xl transition-colors cursor-pointer ${
           darkMode ? 'text-white hover:text-purple-300' : 'text-gray-900 hover:text-pink-500'
         }`}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
         AG
-      </motion.a>
+      </motion.button>
       
       {/* Desktop Menu */}
       <div className="hidden lg:flex gap-4 xl:gap-8 items-center">
         {links.map((link, index) => (
-          <motion.a
+          <motion.button
             key={link.href}
-            href={link.href}
-            className={`relative group font-medium transition-colors text-sm xl:text-base ${
+            onClick={() => scrollToSection && scrollToSection(link.sectionIndex)}
+            className={`relative group font-medium transition-colors text-sm xl:text-base cursor-pointer ${
               darkMode ? 'text-gray-200 hover:text-purple-300' : 'text-gray-700 hover:text-pink-500'
             }`}
             initial={{ opacity: 0, y: -20 }}
@@ -130,7 +135,7 @@ export default function Navbar() {
                 darkMode ? 'bg-purple-300' : 'bg-pink-500'
               }`}
             ></span>
-          </motion.a>
+          </motion.button>
         ))}
         
         {/* Passions Dropdown */}
@@ -175,18 +180,20 @@ export default function Navbar() {
                 }`}
                 onMouseLeave={() => setIsPassionsOpen(false)}
               >
-                <Link
-                  href="#passions"
-                  className={`flex items-center gap-3 px-4 py-3 transition-colors border-b ${
+                <button
+                  onClick={() => {
+                    scrollToSection && scrollToSection(4); // Passions is index 4
+                    setIsPassionsOpen(false);
+                  }}
+                  className={`flex items-center gap-3 px-4 py-3 transition-colors border-b cursor-pointer w-full text-left ${
                     darkMode 
                       ? 'hover:bg-gray-700/50 text-gray-200 hover:text-purple-300 border-gray-700/50' 
                       : 'hover:bg-gray-100/50 text-gray-700 hover:text-pink-500 border-gray-200/50'
                   } rounded-t-xl`}
-                  onClick={() => setIsPassionsOpen(false)}
                 >
                   <span className="text-lg"></span>
                   <span className="font-medium text-sm">Passions Section</span>
-                </Link>
+                </button>
                 {passionPages.map((passion, index) => (
                   <Link
                     key={passion.href}
@@ -208,9 +215,9 @@ export default function Navbar() {
         </div>
         
         {/* Blog Link */}
-        <motion.a
-          href="#blog"
-          className={`relative group font-medium transition-colors text-sm xl:text-base ${
+        <motion.button
+          onClick={() => scrollToSection && scrollToSection(5)} // Blog is index 5
+          className={`relative group font-medium transition-colors text-sm xl:text-base cursor-pointer ${
             darkMode ? 'text-gray-200 hover:text-purple-300' : 'text-gray-700 hover:text-pink-500'
           }`}
           initial={{ opacity: 0, y: -20 }}
@@ -224,7 +231,7 @@ export default function Navbar() {
               darkMode ? 'bg-purple-300' : 'bg-pink-500'
             }`}
           ></span>
-        </motion.a>
+        </motion.button>
         
         <motion.button
           onClick={toggleTheme}
@@ -285,18 +292,20 @@ export default function Navbar() {
             }`}
           >
             {links.map((link, index) => (
-              <a
+              <button
                 key={link.href}
-                href={link.href}
-                className={`block px-4 py-3 transition-colors ${
+                onClick={() => {
+                  scrollToSection && scrollToSection(link.sectionIndex);
+                  setIsMobileMenuOpen(false);
+                }}
+                className={`block px-4 py-3 transition-colors cursor-pointer w-full text-left ${
                   darkMode 
                     ? 'hover:bg-gray-700/50 text-gray-200 hover:text-purple-300' 
                     : 'hover:bg-gray-100/50 text-gray-700 hover:text-pink-500'
                 } ${index === 0 ? 'rounded-t-xl' : ''}`}
-                onClick={() => setIsMobileMenuOpen(false)}
               >
                 {link.label}
-              </a>
+              </button>
             ))}
             
             {/* Mobile Passions Dropdown */}
@@ -329,21 +338,21 @@ export default function Navbar() {
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <Link
-                      href="#passions"
-                      className={`flex items-center gap-3 px-6 py-3 transition-colors border-b ${
+                    <button
+                      onClick={() => {
+                        scrollToSection && scrollToSection(4); // Passions is index 4
+                        setIsPassionsOpen(false);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className={`flex items-center gap-3 px-6 py-3 transition-colors border-b cursor-pointer w-full text-left ${
                         darkMode 
                           ? 'hover:bg-gray-700/50 text-gray-200 hover:text-purple-300 border-gray-700/50' 
                           : 'hover:bg-gray-100/50 text-gray-700 hover:text-pink-500 border-gray-200/50'
                       }`}
-                      onClick={() => {
-                        setIsPassionsOpen(false);
-                        setIsMobileMenuOpen(false);
-                      }}
                     >
                       <span className="text-lg"></span>
                       <span className="font-medium text-sm">Passions Section</span>
-                    </Link>
+                    </button>
                     {passionPages.map((passion, index) => (
                       <Link
                         key={passion.href}
@@ -369,17 +378,19 @@ export default function Navbar() {
             
             {/* Mobile Blog Link */}
             <div className={`border-t ${darkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
-              <a
-                href="#blog"
-                className={`block px-4 py-3 transition-colors rounded-b-xl ${
+              <button
+                onClick={() => {
+                  scrollToSection && scrollToSection(5); // Blog is index 5
+                  setIsMobileMenuOpen(false);
+                }}
+                className={`block px-4 py-3 transition-colors rounded-b-xl cursor-pointer w-full text-left ${
                   darkMode 
                     ? 'hover:bg-gray-700/50 text-gray-200 hover:text-purple-300' 
                     : 'hover:bg-gray-100/50 text-gray-700 hover:text-pink-500'
                 }`}
-                onClick={() => setIsMobileMenuOpen(false)}
               >
                 Blog
-              </a>
+              </button>
             </div>
           </motion.div>
         )}
