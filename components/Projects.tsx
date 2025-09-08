@@ -13,7 +13,7 @@ const projects = [
   { 
     title: "ANSSI Alerts Analysis", 
     desc: "Automated ANSSI vulnerability analysis: CVE extraction, enrichment (MITRE/FIRST), ML insights, critical email alerts.",
-    tech: ["Python", "KMeans", "Classification"],
+    tech: ["Python", "KMeans", "PCA"],
     link: "https://github.com/Alexandre-gng/ANSSI_alerts",
     color: '#FFB347'
   },
@@ -21,6 +21,7 @@ const projects = [
     title: "Connect 4 Algorithm", 
     desc: "Advanced algorithm research for optimizing gameplay in Connect 4 using Minimax and Alpha-Beta pruning.",
     tech: ["Python", "Minimax", "Game Theory"],
+    link: "https://raw.githubusercontent.com/Phaztox/my-portfolio/master/files/Connect-4_FinalVersion.py",
     color: '#CBB3EE'
   },
 ];

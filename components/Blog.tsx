@@ -58,9 +58,9 @@ export default function Blog() {
             viewport={{ once: false, amount: 0.3 }}
             transition={{ duration: 0.4, delay: 0.2 }}
           >
-            <h3 className={`font-semibold text-responsive-card-title mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Exploring AI Bias in Datasets</h3>
+            <h3 className={`font-semibold text-responsive-card-title mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>The Unseen Architect: My Personal Journey Through the Landscape of Music (WIP)</h3>
             <p className={`text-responsive-card leading-relaxed ${darkMode ? 'text-gray-100' : 'text-gray-700'}`}>
-              A reflection on fairness and ethics in AI.
+              A personal reflection on how music shapes my life, fuels my creativity, and serves as a constant companion through all of life's ups and downs.
             </p>
           </motion.article>
           <motion.article 
@@ -74,9 +74,9 @@ export default function Blog() {
             viewport={{ once: false, amount: 0.3 }}
             transition={{ duration: 0.4, delay: 0.4 }}
           >
-            <h3 className={`font-semibold text-responsive-card-title mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Optimizing Algorithms with Python</h3>
+            <h3 className={`font-semibold text-responsive-card-title mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Whispered Calculations: An Ode to Tuning Builds, Stats, and Team Alchemy. (WIP)</h3>
             <p className={`text-responsive-card leading-relaxed ${darkMode ? 'text-gray-100' : 'text-gray-700'}`}>
-              Techniques for performance and scalability.
+              A deep dive into the art and science of game mechanics, exploring how small adjustments can lead to significant advantages in competitive play.
             </p>
           </motion.article>
         </div>

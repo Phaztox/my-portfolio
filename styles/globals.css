@@ -219,7 +219,7 @@ body {
 }
 
 .responsive-icon-size {
-  font-size: clamp(1.25rem, min(1.8vw, 2.2vh), 2rem);
+  font-size: clamp(1.75rem, min(2.5vw, 3vh), 2.75rem);
 }
 
 /* Badge and chip sizing - minimal changes */
