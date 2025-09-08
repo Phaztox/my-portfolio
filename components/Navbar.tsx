@@ -15,10 +15,13 @@ export default function Navbar({ scrollToSection, sections }: NavbarProps) {
   const [mounted, setMounted] = useState(false);
   const [isPassionsOpen, setIsPassionsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const passionsRef = useRef<HTMLDivElement>(null);
+  const passionsDropdownRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const navbarRef = useRef<HTMLElement>(null);
   const passionsButtonRef = useRef<HTMLButtonElement>(null);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Prevent hydration mismatch
   useEffect(() => {
@@ -37,7 +40,7 @@ export default function Navbar({ scrollToSection, sections }: NavbarProps) {
     }
   }, [mounted]);
 
-  // Close passions dropdown when clicking outside
+  // Close passions dropdown when clicking outside or mouse moves too far
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       const target = event.target as Node;
@@ -63,13 +66,66 @@ export default function Navbar({ scrollToSection, sections }: NavbarProps) {
       }
     };
 
+    const handleMouseMove = (event: MouseEvent) => {
+      setMousePosition({ x: event.clientX, y: event.clientY });
+      
+      if (isPassionsOpen && passionsButtonRef.current) {
+        const buttonRect = passionsButtonRef.current.getBoundingClientRect();
+        let combinedRect: { left: number; right: number; top: number; bottom: number } = {
+          left: buttonRect.left,
+          right: buttonRect.right,
+          top: buttonRect.top,
+          bottom: buttonRect.bottom
+        };
+        
+        // If the dropdown is visible, include its bounds too
+        if (passionsDropdownRef.current) {
+          const dropdownRect = passionsDropdownRef.current.getBoundingClientRect();
+          combinedRect = {
+            left: Math.min(dropdownRect.left, buttonRect.left),
+            right: Math.max(dropdownRect.right, buttonRect.right),
+            top: Math.min(dropdownRect.top, buttonRect.top),
+            bottom: Math.max(dropdownRect.bottom, buttonRect.bottom)
+          };
+        }
+        
+        const distance = Math.sqrt(
+          Math.pow(Math.max(0, combinedRect.left - event.clientX, event.clientX - combinedRect.right), 2) +
+          Math.pow(Math.max(0, combinedRect.top - event.clientY, event.clientY - combinedRect.bottom), 2)
+        );
+        
+        // Close if mouse is more than 120px away from the dropdown area (increased from 100px)
+        if (distance > 120) {
+          // Add a short delay to prevent accidental closing while navigating the menu
+          if (hoverTimeoutRef.current) {
+            clearTimeout(hoverTimeoutRef.current);
+          }
+          hoverTimeoutRef.current = setTimeout(() => {
+            setIsPassionsOpen(false);
+          }, 150); // Reduced from 300ms to 150ms for quicker response
+        } else {
+          // Cancel closing if mouse comes back within range
+          if (hoverTimeoutRef.current) {
+            clearTimeout(hoverTimeoutRef.current);
+            hoverTimeoutRef.current = null;
+          }
+        }
+      }
+    };
+
     document.addEventListener('mousedown', handleClickOutside);
     document.addEventListener('touchstart', handleClickOutside);
+    document.addEventListener('mousemove', handleMouseMove);
+    
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener('mousemove', handleMouseMove);
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
     };
-  }, []);
+  }, [isPassionsOpen]);
 
   if (!mounted) {
     return <div className="h-20"></div>; // Placeholder to prevent layout shift
@@ -141,8 +197,15 @@ export default function Navbar({ scrollToSection, sections }: NavbarProps) {
         {/* Passions Dropdown */}
         <div className="relative" ref={passionsRef}>
           <motion.button
+            ref={passionsButtonRef}
             onClick={() => setIsPassionsOpen(!isPassionsOpen)}
-            onMouseEnter={() => setIsPassionsOpen(true)}
+            onMouseEnter={() => {
+              if (hoverTimeoutRef.current) {
+                clearTimeout(hoverTimeoutRef.current);
+                hoverTimeoutRef.current = null;
+              }
+              setIsPassionsOpen(true);
+            }}
             className={`relative group font-medium transition-colors text-sm xl:text-base flex items-center gap-1 ${
               darkMode ? 'text-gray-200 hover:text-purple-300' : 'text-gray-700 hover:text-pink-500'
             }`}
@@ -169,16 +232,22 @@ export default function Navbar({ scrollToSection, sections }: NavbarProps) {
           <AnimatePresence>
             {isPassionsOpen && (
               <motion.div
+                ref={passionsDropdownRef}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
-                className={`absolute top-full left-0 mt-2 w-48 rounded-xl shadow-xl border transition-all duration-300 ${
+                className={`absolute top-full left-0 mt-2 w-48 rounded-xl shadow-xl border ${
                   darkMode 
                     ? 'bg-gray-800/95 border-gray-700/50 backdrop-blur-md' 
                     : 'bg-white/95 border-gray-200/50 backdrop-blur-md'
                 }`}
-                onMouseLeave={() => setIsPassionsOpen(false)}
+                onMouseEnter={() => {
+                  if (hoverTimeoutRef.current) {
+                    clearTimeout(hoverTimeoutRef.current);
+                    hoverTimeoutRef.current = null;
+                  }
+                }}
               >
                 <button
                   onClick={() => {
