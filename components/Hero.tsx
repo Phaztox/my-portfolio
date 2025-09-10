@@ -1,6 +1,7 @@
 // components/Hero.tsx - SMOOTH SCROLL REVEAL
 import { motion } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
+import CVDownload from "./CVDownload";
 
 interface HeroProps {
   scrollToSection?: (index: number) => void;
@@ -45,19 +46,7 @@ export default function Hero({ scrollToSection }: HeroProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.9 }}
         >
-          <motion.a
-            href="https://raw.githubusercontent.com/Phaztox/my-portfolio/master/files/CV_Antonin_Lechen_GABET_EN.pdf"
-            className="responsive-button-padding text-white responsive-card-radius shadow-xl hover:shadow-2xl text-responsive-body font-semibold transform transition-all duration-300"
-            style={{ backgroundColor: '#F7A8B8' }}
-            whileHover={{ 
-              scale: 1.05, 
-              backgroundColor: '#EC4899',
-              boxShadow: '0 25px 50px -12px rgba(236, 72, 153, 0.25)'
-            }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Download CV
-          </motion.a>
+          <CVDownload />
           
           <motion.button
             onClick={() => scrollToSection && scrollToSection(1)} // About section is index 1
