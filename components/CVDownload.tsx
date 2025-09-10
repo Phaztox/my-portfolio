@@ -22,7 +22,7 @@ export default function CVDownload({ className }: CVDownloadProps) {
   };
 
   return (
-    <div className="relative">
+    <div className="relative w-auto">
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
         className={`responsive-button-padding text-white responsive-card-radius shadow-xl hover:shadow-2xl text-responsive-body font-semibold transform transition-all duration-300 flex items-center justify-center gap-2 ${className}`}

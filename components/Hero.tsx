@@ -41,27 +41,29 @@ export default function Hero({ scrollToSection }: HeroProps) {
         </motion.p>
         
         <motion.div 
-          className="flex flex-col sm:flex-row responsive-button-gap justify-center responsive-section-padding"
+          className="flex flex-col sm:flex-row responsive-button-gap justify-center items-center responsive-section-padding"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.9 }}
         >
           <CVDownload />
           
-          <motion.button
-            onClick={() => scrollToSection && scrollToSection(1)} // About section is index 1
-            className={`responsive-button-padding bg-transparent border-2 border-orange-400 responsive-card-radius hover:bg-orange-400 hover:text-white text-responsive-body font-semibold transform transition-all duration-300 cursor-pointer ${
-              darkMode ? 'text-gray-200' : 'text-gray-800'
-            }`}
-            whileHover={{ 
-              scale: 1.05,
-              backgroundColor: '#FFB347',
-              borderColor: '#FFB347'
-            }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Explore Journey
-          </motion.button>
+          <div className="flex justify-center">
+            <motion.button
+              onClick={() => scrollToSection && scrollToSection(1)} // About section is index 1
+              className={`responsive-button-padding bg-transparent border-2 border-orange-400 responsive-card-radius hover:bg-orange-400 hover:text-white text-responsive-body font-semibold transform transition-all duration-300 cursor-pointer inline-flex items-center justify-center ${
+                darkMode ? 'text-gray-200' : 'text-gray-800'
+              }`}
+              whileHover={{ 
+                scale: 1.05,
+                backgroundColor: '#FFB347',
+                borderColor: '#FFB347'
+              }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Explore Journey
+            </motion.button>
+          </div>
         </motion.div>
       </motion.div>
     </section>
