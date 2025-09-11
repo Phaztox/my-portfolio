@@ -4,11 +4,17 @@
 html {
   scroll-behavior: smooth;
   color-scheme: light dark;
+  margin: 0;
+  padding: 0;
+  background: transparent;
 }
 
 body {
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  background: transparent;
 }
 
 /* Custom animations */
@@ -220,6 +226,11 @@ body {
 
 .responsive-icon-size {
   font-size: clamp(1.75rem, min(2.5vw, 3vh), 2.75rem);
+}
+
+/* Smaller icon size specifically for Passions section to prevent overflow */
+.passion-icon-size {
+  font-size: clamp(1.25rem, min(2vw, 2.5vh), 2rem);
 }
 
 /* Badge and chip sizing - minimal changes */

@@ -79,7 +79,7 @@ export default function Passions() {
                 }}
               >
                 <motion.div 
-                  className="responsive-card-radius flex items-center justify-center mb-3 text-white responsive-icon-size"
+                  className="responsive-card-radius flex items-center justify-center mb-3 text-white passion-icon-size"
                   style={{ 
                     backgroundColor: passion.color,
                     width: `clamp(2rem, min(3.5vw, 4vh), 3rem)`,

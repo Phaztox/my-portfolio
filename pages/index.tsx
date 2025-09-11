@@ -21,6 +21,18 @@ export default function Home() {
     // Disable default scroll behavior for the smooth section scrolling on desktop
     document.documentElement.style.scrollBehavior = isMobile ? 'auto' : 'smooth';
     
+    // Set background colors to prevent white/black bar artifacts during transitions
+    const bgColor = darkMode 
+      ? 'linear-gradient(to bottom right, rgb(17, 24, 39), rgba(88, 28, 135, 0.3), rgba(49, 46, 129, 0.3))'
+      : 'linear-gradient(to bottom right, rgb(243, 232, 255), rgb(251, 207, 232), rgb(199, 210, 254))';
+    
+    document.documentElement.style.background = bgColor;
+    document.body.style.background = bgColor;
+    document.documentElement.style.margin = '0';
+    document.documentElement.style.padding = '0';
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    
     // On desktop, completely disable scrolling since we handle it manually
     if (!isMobile) {
       document.body.style.overflow = 'hidden';
@@ -37,11 +49,14 @@ export default function Home() {
       document.body.style.overflow = 'auto';
       document.documentElement.style.overflow = 'auto';
       document.body.classList.remove('main-scrollbar');
+      // Reset backgrounds
+      document.documentElement.style.background = '';
+      document.body.style.background = '';
     };
-  }, [isMobile]);
+  }, [isMobile, darkMode]);
 
   return (
-    <div className={`min-h-screen relative transition-all duration-300 ${
+    <div className={`min-h-screen w-full relative transition-all duration-300 m-0 p-0 ${
       darkMode ? 'bg-gradient-to-br from-gray-900 via-purple-900/30 to-indigo-900/30' : 'bg-gradient-to-br from-purple-100 via-pink-100 to-indigo-200'
     }`}>
       {/* Floating background elements */}
