@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from "@/contexts/ThemeContext";
+import Image from 'next/image';
 
 interface CVDownloadProps {
   className?: string;
@@ -78,19 +79,25 @@ export default function CVDownload({ className }: CVDownloadProps) {
                 whileHover={{ x: 6 }}
                 transition={{ duration: 0.2 }}
               >
-                <motion.span 
-                  className="text-2xl"
+                <motion.div
+                  className="flex-shrink-0"
                   whileHover={{ scale: 1.1 }}
                   transition={{ duration: 0.2 }}
                 >
-                  🇬🇧
-                </motion.span>
+                  <Image
+                    src="/Flag-United-Emoji.svg"
+                    alt="UK Flag"
+                    width={32}
+                    height={32}
+                    className="rounded-sm"
+                  />
+                </motion.div>
                 <div className="flex-1">
-                  <div className="font-bold text-responsive-body">In English</div>
+                  <div className="font-bold text-responsive-body">English</div>
                   <div className={`text-sm transition-colors ${
                     darkMode ? 'text-gray-400 group-hover:text-pink-200' : 'text-gray-500 group-hover:text-pink-600'
                   }`}>
-                    
+                    English version
                   </div>
                 </div>
                 <motion.span 
@@ -118,19 +125,25 @@ export default function CVDownload({ className }: CVDownloadProps) {
                 whileHover={{ x: 6 }}
                 transition={{ duration: 0.2 }}
               >
-                <motion.span 
-                  className="text-2xl"
+                <motion.div
+                  className="flex-shrink-0"
                   whileHover={{ scale: 1.1 }}
                   transition={{ duration: 0.2 }}
                 >
-                  🇫🇷
-                </motion.span>
+                  <Image
+                    src="/Flag-France-Emoji.svg"
+                    alt="France Flag"
+                    width={32}
+                    height={32}
+                    className="rounded-sm"
+                  />
+                </motion.div>
                 <div className="flex-1">
-                  <div className="font-bold text-responsive-body">En Français</div>
+                  <div className="font-bold text-responsive-body">Français</div>
                   <div className={`text-sm transition-colors ${
                     darkMode ? 'text-gray-400 group-hover:text-pink-200' : 'text-gray-500 group-hover:text-pink-600'
                   }`}>
-                    
+                    French Version
                   </div>
                 </div>
                 <motion.span 
