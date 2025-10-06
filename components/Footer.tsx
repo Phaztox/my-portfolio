@@ -100,7 +100,7 @@ export default function Footer() {
           <div className={`text-center text-xs md:text-sm transition-all duration-300 ${
             darkMode ? 'text-gray-400' : 'text-gray-600'
           }`}>
-            <p>© 2025 Antonin Gabet | Built with <span className={darkMode ? 'text-pink-400' : 'text-pink-500'}>❤️</span></p>
+            <p>© 2025 Antonin Gabet <span className={darkMode ? 'text-pink-400' : 'text-pink-500'}></span></p>
           </div>
         </div>
       </div>
