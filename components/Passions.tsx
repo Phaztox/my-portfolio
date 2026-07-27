@@ -1,125 +1,63 @@
-// components/Passions.tsx - SEAMLESS FLOW WITH LINKS
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { useTheme } from "@/contexts/ThemeContext";
-
-const passions = [
-  { 
-    title: "Gaming", 
-    desc: "Gaming is my ultimate arena for min-maxing builds and dominating the meta with a programming-driven mindset. The thrill is flawlessly executing engineered strategies.", 
-    icon: "🎮", 
-    color: "#F7A8B8",
-    href: "/passions/gaming"
-  },
-  { 
-    title: "Music", 
-    desc: "From classical piano to electronic music production. As an 8-year former musician, music holds an important place in my life, providing inspiration and outlet.", 
-    icon: "🎵", 
-    color: "#FFB347",
-    href: "/passions/music"
-  },
-  { 
-    title: "Asian Culture", 
-    desc: "Japanese and Chinese traditions & media. I am particularly attracted by how they blend history with modernity.", 
-    icon: "🏮", 
-    color: "#CBB3EE",
-    href: "/passions/asian-culture"
-  },
-  { 
-    title: "Stats & Logic", 
-    desc: "Mathematics, optimization, and AI models. I enjoy tackling complex problems and finding efficient solutions.", 
-    icon: "📊", 
-    color: "#F7A8B8",
-    href: "/passions/stats-and-logic"
-  },
-];
+// components/Passions.tsx
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { passions } from '@/data/passions';
 
 export default function Passions() {
-  const { darkMode } = useTheme();
-
   return (
-    <section 
-      id="passions" 
-      className="section-container px-6 sm:px-8 relative overflow-hidden"
-    >
-      
+    <section id="passions" className="section-container px-6 sm:px-8 relative overflow-hidden">
       <div className="max-w-4xl mx-auto relative z-10 w-full">
-        <motion.h2 
-          className={`text-responsive-heading font-bold mb-6 md:mb-8 text-center ${darkMode ? 'text-white' : 'text-gray-900'}`}
+        <motion.h2
+          className="text-responsive-heading font-bold mb-6 md:mb-8 text-center text-ink"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.4 }}
         >
           Passions
         </motion.h2>
-        
+
         <div className="grid md:grid-cols-2 passion-grid-gap">
           {passions.map((passion, i) => (
-            <Link key={i} href={passion.href}>
-              <motion.div
-                className={`group passion-card-padding backdrop-blur-sm responsive-card-radius shadow-lg 
-                           hover:shadow-xl transition-all duration-300 cursor-pointer transform-gpu ${
-                  darkMode 
-                    ? 'bg-gray-800/70 border border-gray-700/60 hover:bg-gray-800/80' 
-                    : 'bg-white/80 border border-gray-200/60 hover:bg-white/90'
-                }`}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: false, amount: 0.3 }}
-                transition={{ duration: 0.3, delay: i * 0.1 }}
-                whileHover={{ 
-                  y: -8,
-                  scale: 1.03,
-                  transition: { duration: 0.2 }
-                }}
-                whileTap={{ 
-                  scale: 0.98,
-                  transition: { duration: 0.1 }
-                }}
+            <motion.div
+              key={passion.href}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.3, delay: i * 0.1 }}
+              whileHover={{ y: -8, scale: 1.03, transition: { duration: 0.2 } }}
+              whileTap={{ scale: 0.98, transition: { duration: 0.1 } }}
+              className="h-full"
+            >
+              <Link
+                href={passion.href}
+                className="group block h-full passion-card-padding backdrop-blur-sm responsive-card-radius shadow-lg hover:shadow-xl transition-all duration-300 transform-gpu bg-surface border border-border-soft"
               >
-                <motion.div 
-                  className="responsive-card-radius flex items-center justify-center mb-3 text-white passion-icon-size"
-                  style={{ 
+                <span
+                  className="responsive-card-radius flex items-center justify-center mb-3 text-white passion-icon-size transition-transform duration-200 group-hover:rotate-12 group-hover:scale-110"
+                  style={{
                     backgroundColor: passion.color,
-                    width: `clamp(2rem, min(3.5vw, 4vh), 3rem)`,
-                    height: `clamp(2rem, min(3.5vw, 4vh), 3rem)`
+                    width: 'clamp(2rem, min(3.5vw, 4vh), 3rem)',
+                    height: 'clamp(2rem, min(3.5vw, 4vh), 3rem)',
                   }}
-                  whileHover={{ 
-                    rotate: 15,
-                    scale: 1.1,
-                    transition: { duration: 0.2 }
-                  }}
+                  aria-hidden="true"
                 >
                   {passion.icon}
-                </motion.div>
-                <h3 className={`font-semibold text-responsive-card-title mb-2 transition-colors ${
-                  darkMode 
-                    ? 'text-white group-hover:text-pink-400' 
-                    : 'text-gray-900 group-hover:text-pink-600'
-                }`}>
+                </span>
+
+                <h3 className="font-semibold text-responsive-card-title mb-2 transition-colors text-ink group-hover:text-pink-600 dark:group-hover:text-pink-400">
                   {passion.title}
                 </h3>
-                <p className={`text-responsive-card mb-3 opacity-90 ${darkMode ? 'text-gray-200' : 'text-gray-600'}`}>
-                  {passion.desc}
-                </p>
-                <div className={`flex items-center responsive-badge-text font-medium transition-colors ${
-                  darkMode 
-                    ? 'group-hover:text-pink-400' 
-                    : 'group-hover:text-pink-600'
-                }`}>
-                  <span>Explore more</span>
-                  <motion.span 
-                    className="ml-2"
-                    initial={{ x: 0 }}
-                    whileHover={{ x: 5 }}
-                    transition={{ duration: 0.2 }}
-                  >
+                <p className="text-responsive-card mb-3 opacity-90 text-ink-muted">{passion.desc}</p>
+
+                <span className="flex items-center responsive-badge-text font-medium transition-colors text-ink-muted group-hover:text-pink-600 dark:group-hover:text-pink-400">
+                  Explore more
+                  <span aria-hidden="true" className="ml-2 transition-transform duration-200 group-hover:translate-x-1">
                     →
-                  </motion.span>
-                </div>
-              </motion.div>
-            </Link>
+                  </span>
+                </span>
+              </Link>
+            </motion.div>
           ))}
         </div>
       </div>

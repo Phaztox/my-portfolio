@@ -1,0 +1,8 @@
+{
+  // VS Code's built-in CSS language service doesn't know Tailwind v4's
+  // at-rules (@theme, @custom-variant, @apply...), so it flags them as unknown.
+  "css.lint.unknownAtRules": "ignore",
+  "files.associations": {
+    "*.css": "tailwindcss"
+  }
+}

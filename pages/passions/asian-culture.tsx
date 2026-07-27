@@ -1,211 +1,119 @@
 // pages/passions/asian-culture.tsx
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { useTheme } from "@/contexts/ThemeContext";
-import { useEffect } from "react";
+import { motion } from 'framer-motion';
+import SubPageLayout from '@/components/SubPageLayout';
+
+const interests = [
+  {
+    title: 'Traditional Arts',
+    accent: 'text-purple-600 dark:text-purple-300',
+    surface: 'bg-purple-100/50 dark:bg-gray-700/50',
+    items: [
+      'History and philosophy, they never forget their roots',
+      'Architecture and nature (Temples, Gardens, ...)',
+      'Mentality and mindset of the population',
+      'Tradition in general (Clothes, Food, Festivals, ...)',
+    ],
+  },
+  {
+    title: 'Modern Media',
+    accent: 'text-indigo-600 dark:text-indigo-300',
+    surface: 'bg-indigo-100/50 dark:bg-gray-700/50',
+    items: [
+      'Anime/manga consumption and production',
+      'Asian game designs, linked to Traditional aspects',
+      'Digital art and music style, internet culture',
+      'Recent technology progress (AI, VR, ...)',
+    ],
+  },
+];
+
+const principles = [
+  {
+    term: '仁 (Rén)',
+    desc: 'Humaneness, compassion, empathy',
+    accent: 'text-purple-600 dark:text-purple-300',
+    border: 'border-purple-200/60 dark:border-gray-600/50',
+  },
+  {
+    term: '改善 (Kaizen)',
+    desc: 'Continuous improvement, steady progress',
+    accent: 'text-indigo-600 dark:text-indigo-300',
+    border: 'border-indigo-200/60 dark:border-gray-600/50',
+  },
+  {
+    term: '無為 (Wú wéi)',
+    desc: 'Effortless action, natural flow',
+    accent: 'text-pink-600 dark:text-pink-300',
+    border: 'border-pink-200/60 dark:border-gray-600/50',
+  },
+];
 
 export default function AsianCulture() {
-  const { darkMode, toggleTheme } = useTheme();
-
-  // Hide scrollbar on desktop only
-  useEffect(() => {
-    const isDesktop = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
-    
-    if (isDesktop) {
-      document.body.setAttribute('data-hide-scrollbar', 'true');
-      document.documentElement.setAttribute('data-hide-scrollbar', 'true');
-    }
-    
-    // For mobile, ensure the scrollbar works by triggering a scroll event
-    if (isMobile) {
-      setTimeout(() => {
-        // Trigger scroll event to initialize mobile scrollbar
-        const scrollableContainer = document.querySelector('.min-h-screen.overflow-y-auto');
-        if (scrollableContainer) {
-          const event = new Event('scroll');
-          scrollableContainer.dispatchEvent(event);
-        }
-      }, 200);
-    }
-    
-    return () => {
-      document.body.removeAttribute('data-hide-scrollbar');
-      document.documentElement.removeAttribute('data-hide-scrollbar');
-    };
-  }, []);
-
   return (
-    <div className={`min-h-screen overflow-y-auto transition-all duration-300 ${
-      darkMode ? 'bg-gradient-to-br from-gray-900 via-purple-950/20 to-indigo-950/20' : 'bg-gradient-to-br from-purple-50 to-indigo-100'
-    }`}>
-      {/* Navigation */}
-      <nav className={`fixed top-0 w-full px-6 py-4 z-50 backdrop-blur-md transition-all duration-300 ${
-        darkMode ? 'bg-gray-900/95 border-b border-gray-700/50' : 'bg-white/95 border-b border-gray-200/50'
-      }`}>
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <Link href="/" className={`font-bold text-2xl transition-colors ${
-            darkMode ? 'text-white hover:text-purple-300' : 'text-gray-900 hover:text-pink-500'
-          }`}>
-            AG
-          </Link>
-          
-          <div className="flex items-center gap-4">
-            {/* Dark/Light Mode Toggle */}
-            <button
-              onClick={toggleTheme}
-              className={`p-2 rounded-lg transition-all duration-300 hover:scale-110 ${
-                darkMode 
-                  ? 'bg-gray-800 hover:bg-gray-700 text-yellow-400' 
-                  : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-              }`}
-              aria-label="Toggle dark mode"
+    <SubPageLayout
+      title="Asian Culture"
+      subtitle="Japanese and Chinese traditions & media"
+      description="How Japanese and Chinese cultures blend centuries-old tradition with cutting-edge technology — and what that perspective brings to the way I think about innovation."
+      icon="🏮"
+      accent="indigo"
+      backHref="/#passions"
+      backLabel="Back to Passions"
+    >
+      <motion.section
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="rounded-2xl p-8 bg-surface backdrop-blur-sm shadow-xl"
+      >
+        <h2 className="text-3xl font-semibold mb-6 text-ink">Cultural Fascination</h2>
+        <p className="text-lg mb-6 leading-relaxed text-ink-soft">
+          I&apos;ve always been fascinated by the way Asian cultures, especially in Japan and China,
+          manage to blend history and modernity so seamlessly. I love how centuries-old traditions coexist
+          with some of the most advanced technologies in the world, creating a balance that shapes
+          art, philosophy, and everyday life in a really unique way. On a personal level,
+          I&apos;m drawn to many aspects of this culture; from anime, manga, and music to the more recent internet culture
+          that has grown so quickly in Asia. Being half Chinese myself, with a mother from China and a father from France,
+          I feel connected to both worlds, and I really enjoy noticing the different perspectives on technology
+          and society that Asian cultures bring compared to the European vision.
+          It&apos;s something that inspires me a lot, both personally and in the way I think about innovation.
+        </p>
+
+        <h3 className="text-2xl font-semibold mb-4 text-ink">Areas of Interest</h3>
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
+          {interests.map((area) => (
+            <div key={area.title} className={`p-6 rounded-lg ${area.surface}`}>
+              <h4 className={`font-semibold mb-3 text-xl ${area.accent}`}>{area.title}</h4>
+              <ul className="space-y-2 text-sm text-ink-soft">
+                {area.items.map((item) => (
+                  <li key={item}>• {item}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <h3 className="text-2xl font-semibold mb-4 text-ink">Philosophy &amp; Technology</h3>
+        <p className="text-lg mb-6 leading-relaxed text-ink-soft">
+          What strikes me most in Asian cultures is how philosophy and technology are often seen as connected
+          rather than separate. Ideas like harmony, balance, and the Japanese principle of kaizen - continuous
+          improvement through small, steady steps - really resonate with the way I think about both software
+          development and personal growth. This mindset of blending values with innovation feels unique
+          compared to other approaches, and I find that truly inspiring.
+        </p>
+
+        <h3 className="text-2xl font-semibold mb-4 text-ink">Cultural Principles I Admire</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {principles.map((principle) => (
+            <div
+              key={principle.term}
+              className={`p-4 text-center rounded-lg border shadow-md dark:shadow-lg bg-white/90 dark:bg-gray-800/80 ${principle.border}`}
             >
-              {darkMode ? (
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
-                </svg>
-              ) : (
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-                </svg>
-              )}
-            </button>
-
-            {/* Back to Passions Link */}
-            <Link href="/#passions" className={`px-4 py-2 rounded-lg transition-all duration-300 ${
-              darkMode 
-                ? 'bg-purple-600 hover:bg-purple-700 text-white' 
-                : 'bg-purple-500 hover:bg-purple-600 text-white'
-            }`}>
-              ← Back to Passions
-            </Link>
-          </div>
+              <h4 className={`font-semibold mb-2 ${principle.accent}`}>{principle.term}</h4>
+              <p className="text-sm text-ink-soft">{principle.desc}</p>
+            </div>
+          ))}
         </div>
-      </nav>
-
-      {/* Scrollable Content */}
-      <div className="pt-24 px-6 pb-20 max-h-screen overflow-y-auto">
-        <div className="max-w-4xl mx-auto space-y-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-r from-purple-500 to-indigo-600 text-4xl mb-6">
-              🏮
-            </div>
-            <h1 className={`text-5xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              Asian Culture
-            </h1>
-            <p className={`text-xl ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-              Japanese and Chinese traditions & media
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className={`rounded-2xl p-8 mb-8 ${
-              darkMode ? 'bg-gray-800/60' : 'bg-white/70'
-            } backdrop-blur-sm shadow-xl`}
-          >
-            <h2 className={`text-3xl font-semibold mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              Cultural Fascination
-            </h2>
-            <p className={`text-lg mb-6 leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              I've always been fascinated by the way Asian cultures, especially in Japan and China, 
-              manage to blend history and modernity so seamlessly. I love how centuries-old traditions coexist 
-              with some of the most advanced technologies in the world, creating a balance that shapes 
-              art, philosophy, and everyday life in a really unique way. On a personal level, 
-              I'm drawn to many aspects of this culture; from anime, manga, and music to the more recent internet culture 
-              that has grown so quickly in Asia. Being half Chinese myself, with a mother from China and a father from France, 
-              I feel connected to both worlds, and I really enjoy noticing the different perspectives on technology 
-              and society that Asian cultures bring compared to the European vision. 
-              It's something that inspires me a lot, both personally and in the way I think about innovation.
-            </p>
-            
-            <h3 className={`text-2xl font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              Areas of Interest
-            </h3>
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
-              <div className={`p-6 rounded-lg ${darkMode ? 'bg-gray-700/50' : 'bg-purple-100/50'}`}>
-                <h4 className={`font-semibold mb-3 text-xl ${darkMode ? 'text-purple-300' : 'text-purple-600'}`}>Traditional Arts</h4>
-                <ul className={`space-y-2 text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  <li>• History and philosophy, they never forget their roots</li>
-                  <li>• Architecture and nature (Temples, Gardens, ...)</li>
-                  <li>• Mentality and mindset of the population</li>
-                  <li>• Tradition in general (Clothes, Food, Festivals, ...)</li>
-                </ul>
-              </div>
-              <div className={`p-6 rounded-lg ${darkMode ? 'bg-gray-700/50' : 'bg-indigo-100/50'}`}>
-                <h4 className={`font-semibold mb-3 text-xl ${darkMode ? 'text-indigo-300' : 'text-indigo-600'}`}>Modern Media</h4>
-                <ul className={`space-y-2 text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  <li>• Anime/manga consumption and production </li>
-                  <li>• Asian game designs, linked to Traditional aspects</li>
-                  <li>• Digital art and music style, internet culture</li>
-                  <li>• Recent technology progress (AI, VR, ...)</li>
-                </ul>
-              </div>
-            </div>
-
-            <h3 className={`text-2xl font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              Philosophy & Technology
-            </h3>
-            <p className={`text-lg mb-6 leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              What strikes me most in Asian cultures is how philosophy and technology are often seen as connected 
-              rather than separate. Ideas like harmony, balance, and the Japanese principle of kaizen - continuous 
-              improvement through small, steady steps - really resonate with the way I think about both software 
-              development and personal growth. This mindset of blending values with innovation feels unique 
-              compared to other approaches, and I find that truly inspiring.
-            </p>
-
-            <h3 className={`text-2xl font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              Cultural Principles I Admire
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className={`p-4 text-center rounded-lg border transition-all duration-300 ${
-                darkMode 
-                  ? 'bg-gray-800/80 border-gray-600/50 shadow-lg' 
-                  : 'bg-white/90 border-purple-200/60 shadow-md'
-              }`}>
-                <h5 className={`font-semibold mb-2 ${darkMode ? 'text-purple-300' : 'text-purple-600'}`}>
-                  仁 (Rén)
-                </h5>
-                <p className={`text-sm ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                  Humaneness, compassion, empathy
-                </p>
-              </div>
-              <div className={`p-4 text-center rounded-lg border transition-all duration-300 ${
-                darkMode 
-                  ? 'bg-gray-800/80 border-gray-600/50 shadow-lg' 
-                  : 'bg-white/90 border-indigo-200/60 shadow-md'
-              }`}>
-                <h5 className={`font-semibold mb-2 ${darkMode ? 'text-indigo-300' : 'text-indigo-600'}`}>
-                  改善 (Kaizen)
-                </h5>
-                <p className={`text-sm ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                  Continuous improvement, steady progress
-                </p>
-              </div>
-              <div className={`p-4 text-center rounded-lg border transition-all duration-300 ${
-                darkMode 
-                  ? 'bg-gray-800/80 border-gray-600/50 shadow-lg' 
-                  : 'bg-white/90 border-pink-200/60 shadow-md'
-              }`}>
-                <h5 className={`font-semibold mb-2 ${darkMode ? 'text-pink-300' : 'text-pink-600'}`}>
-                  無為 (Wú wéi)
-                </h5>
-                <p className={`text-sm ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                  Effortless action, natural flow
-                </p>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    </div>
+      </motion.section>
+    </SubPageLayout>
   );
 }

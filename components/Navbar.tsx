@@ -1,214 +1,166 @@
-// components/Navbar.tsx - WITH PASSIONS DROPDOWN AND MOBILE RESPONSIVE
-import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from "@/contexts/ThemeContext";
-import Link from "next/link";
+// components/Navbar.tsx
+import { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
+import { useTheme } from '@/contexts/ThemeContext';
+import { sections, sectionIndex } from '@/data/sections';
+import { passions } from '@/data/passions';
+import { site } from '@/data/site';
 
 interface NavbarProps {
-  scrollToSection?: (index: number) => void;
-  sections?: string[];
+  scrollToSection: (index: number) => void;
 }
 
-export default function Navbar({ scrollToSection, sections }: NavbarProps) {
+const navLinks = sections
+  .map((section, index) => ({ ...section, index }))
+  .filter((section) => section.navLabel);
+
+export default function Navbar({ scrollToSection }: NavbarProps) {
   const { darkMode, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const [isPassionsOpen, setIsPassionsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const passionsRef = useRef<HTMLDivElement>(null);
-  const passionsDropdownRef = useRef<HTMLDivElement>(null);
-  const mobileMenuRef = useRef<HTMLDivElement>(null);
   const navbarRef = useRef<HTMLElement>(null);
-  const passionsButtonRef = useRef<HTMLButtonElement>(null);
-  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const passionsRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Prevent hydration mismatch
   useEffect(() => {
-    setMounted(true);
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Handle scroll effect
+  // Close either menu on an outside tap. The old version tracked every
+  // mousemove in React state, re-rendering the whole navbar on each pixel.
+  //
+  // `mousedown`/`touchstart` fire before `click`, so anything this handler
+  // closes would be immediately re-opened by the button's own toggle. The
+  // checks below therefore have to treat a tap on the trigger itself as
+  // "inside": the mobile Passions button lives in the mobile menu (not in
+  // `passionsRef`, which is the desktop dropdown), and the hamburger lives in
+  // the navbar (not in `mobileMenuRef`).
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    
-    if (mounted) {
-      window.addEventListener('scroll', handleScroll);
-      return () => window.removeEventListener('scroll', handleScroll);
-    }
-  }, [mounted]);
+    if (!isPassionsOpen && !isMobileMenuOpen) return;
 
-  // Close passions dropdown when clicking outside or mouse moves too far
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+    const handlePointerDown = (event: MouseEvent | TouchEvent) => {
       const target = event.target as Node;
-      
-      // Close passions dropdown if clicking outside (but not on the button itself)
-      if (
-        passionsRef.current && 
-        !passionsRef.current.contains(target) &&
-        passionsButtonRef.current &&
-        !passionsButtonRef.current.contains(target)
-      ) {
+
+      const inPassions = passionsRef.current?.contains(target) ?? false;
+      const inMobileMenu = mobileMenuRef.current?.contains(target) ?? false;
+      const inNavbar = navbarRef.current?.contains(target) ?? false;
+
+      if (!inPassions && !inMobileMenu) {
         setIsPassionsOpen(false);
       }
-      
-      // Close mobile menu if clicking outside the navbar and mobile menu
-      if (
-        mobileMenuRef.current && 
-        !mobileMenuRef.current.contains(target) &&
-        navbarRef.current &&
-        !navbarRef.current.contains(target)
-      ) {
+      if (!inMobileMenu && !inNavbar) {
         setIsMobileMenuOpen(false);
       }
     };
 
-    const handleMouseMove = (event: MouseEvent) => {
-      setMousePosition({ x: event.clientX, y: event.clientY });
-      
-      if (isPassionsOpen && passionsButtonRef.current) {
-        const buttonRect = passionsButtonRef.current.getBoundingClientRect();
-        let combinedRect: { left: number; right: number; top: number; bottom: number } = {
-          left: buttonRect.left,
-          right: buttonRect.right,
-          top: buttonRect.top,
-          bottom: buttonRect.bottom
-        };
-        
-        // If the dropdown is visible, include its bounds too
-        if (passionsDropdownRef.current) {
-          const dropdownRect = passionsDropdownRef.current.getBoundingClientRect();
-          combinedRect = {
-            left: Math.min(dropdownRect.left, buttonRect.left),
-            right: Math.max(dropdownRect.right, buttonRect.right),
-            top: Math.min(dropdownRect.top, buttonRect.top),
-            bottom: Math.max(dropdownRect.bottom, buttonRect.bottom)
-          };
-        }
-        
-        const distance = Math.sqrt(
-          Math.pow(Math.max(0, combinedRect.left - event.clientX, event.clientX - combinedRect.right), 2) +
-          Math.pow(Math.max(0, combinedRect.top - event.clientY, event.clientY - combinedRect.bottom), 2)
-        );
-        
-        // Close if mouse is more than 120px away from the dropdown area (increased from 100px)
-        if (distance > 120) {
-          // Add a short delay to prevent accidental closing while navigating the menu
-          if (hoverTimeoutRef.current) {
-            clearTimeout(hoverTimeoutRef.current);
-          }
-          hoverTimeoutRef.current = setTimeout(() => {
-            setIsPassionsOpen(false);
-          }, 150); // Reduced from 300ms to 150ms for quicker response
-        } else {
-          // Cancel closing if mouse comes back within range
-          if (hoverTimeoutRef.current) {
-            clearTimeout(hoverTimeoutRef.current);
-            hoverTimeoutRef.current = null;
-          }
-        }
-      }
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      setIsPassionsOpen(false);
+      setIsMobileMenuOpen(false);
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('touchstart', handleClickOutside);
-    document.addEventListener('mousemove', handleMouseMove);
-    
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('touchstart', handlePointerDown);
+    document.addEventListener('keydown', handleEscape);
+
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
-      document.removeEventListener('mousemove', handleMouseMove);
-      if (hoverTimeoutRef.current) {
-        clearTimeout(hoverTimeoutRef.current);
-      }
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('touchstart', handlePointerDown);
+      document.removeEventListener('keydown', handleEscape);
     };
-  }, [isPassionsOpen]);
+  }, [isPassionsOpen, isMobileMenuOpen]);
 
-  if (!mounted) {
-    return <div className="h-20"></div>; // Placeholder to prevent layout shift
-  }
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+    };
+  }, []);
 
-  const links = [
-    { href: "#about", label: "About Me", sectionIndex: 1 },
-    { href: "#resume", label: "Studies", sectionIndex: 2 },
-    { href: "#projects", label: "Projects", sectionIndex: 3 },
-  ];
+  const openPassions = () => {
+    if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+    setIsPassionsOpen(true);
+  };
 
-  const passionPages = [
-    { href: "/passions/gaming", label: "Gaming" , icon: ""},
-    { href: "/passions/music", label: "Music", icon: "" },
-    { href: "/passions/asian-culture", label: "Asian Culture", icon: "" },
-    { href: "/passions/stats-and-logic", label: "Stats & Logic", icon: "" },
-  ];
+  const schedulePassionsClose = () => {
+    if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+    closeTimeoutRef.current = setTimeout(() => setIsPassionsOpen(false), 200);
+  };
+
+  const goToSection = (index: number) => {
+    scrollToSection(index);
+    setIsPassionsOpen(false);
+    setIsMobileMenuOpen(false);
+  };
+
+  const linkClass =
+    'relative group font-medium transition-colors text-sm xl:text-base cursor-pointer text-gray-700 hover:text-pink-500 dark:text-gray-200 dark:hover:text-purple-300';
+  const underlineClass =
+    'absolute left-0 -bottom-1 w-0 h-0.5 transition-all group-hover:w-full bg-pink-500 dark:bg-purple-300';
+  const menuItemClass =
+    'flex items-center gap-3 px-4 py-3 transition-colors cursor-pointer w-full text-left text-gray-700 hover:bg-gray-100/50 hover:text-pink-500 dark:text-gray-200 dark:hover:bg-gray-700/50 dark:hover:text-purple-300';
+  const panelClass =
+    'rounded-xl shadow-xl border backdrop-blur-md bg-white/95 border-gray-200/50 dark:bg-gray-800/95 dark:border-gray-700/50';
+  const iconButtonClass =
+    'p-2 border rounded-full text-lg transition-colors bg-gray-100 border-gray-300 hover:bg-gray-200 text-blue-600 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:text-yellow-300';
 
   return (
-    <motion.nav 
+    <motion.nav
       ref={navbarRef}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
       className={`fixed top-0 w-full flex justify-between items-center px-4 sm:px-6 md:px-12 py-4 z-[60] transition-all duration-300 ${
-        isScrolled 
-          ? darkMode
-            ? 'bg-gray-900/95 backdrop-blur-md shadow-lg border-b border-gray-700/20'
-            : 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200/20'
-          : darkMode
-            ? 'bg-gray-900/10 backdrop-blur-sm'
-            : 'bg-white/10 backdrop-blur-sm'
+        isScrolled
+          ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200/20 dark:bg-gray-900/95 dark:border-gray-700/20'
+          : 'bg-white/10 backdrop-blur-sm dark:bg-gray-900/10'
       }`}
     >
-      <motion.button 
-        onClick={() => scrollToSection && scrollToSection(0)}
-        className={`font-bold text-xl sm:text-2xl transition-colors cursor-pointer ${
-          darkMode ? 'text-white hover:text-purple-300' : 'text-gray-900 hover:text-pink-500'
-        }`}
+      <motion.button
+        onClick={() => goToSection(0)}
+        aria-label={`${site.name} — back to top`}
+        className="font-bold text-xl sm:text-2xl transition-colors cursor-pointer text-gray-900 hover:text-pink-500 dark:text-white dark:hover:text-purple-300"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
-        AG
+        {site.initials}
       </motion.button>
-      
-      {/* Desktop Menu */}
+
+      {/* Desktop menu */}
       <div className="hidden lg:flex gap-4 xl:gap-8 items-center">
-        {links.map((link, index) => (
+        {navLinks.map((link, i) => (
           <motion.button
-            key={link.href}
-            onClick={() => scrollToSection && scrollToSection(link.sectionIndex)}
-            className={`relative group font-medium transition-colors text-sm xl:text-base cursor-pointer ${
-              darkMode ? 'text-gray-200 hover:text-purple-300' : 'text-gray-700 hover:text-pink-500'
-            }`}
+            key={link.id}
+            onClick={() => goToSection(link.index)}
+            className={linkClass}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
+            transition={{ duration: 0.5, delay: i * 0.1 }}
             whileHover={{ scale: 1.05 }}
           >
-            {link.label}
-            <span 
-              className={`absolute left-0 -bottom-1 w-0 h-0.5 transition-all group-hover:w-full ${
-                darkMode ? 'bg-purple-300' : 'bg-pink-500'
-              }`}
-            ></span>
+            {link.navLabel}
+            <span className={underlineClass} />
           </motion.button>
         ))}
-        
-        {/* Passions Dropdown */}
-        <div className="relative" ref={passionsRef}>
+
+        {/* Passions dropdown */}
+        <div
+          className="relative"
+          ref={passionsRef}
+          onMouseEnter={openPassions}
+          onMouseLeave={schedulePassionsClose}
+        >
           <motion.button
-            ref={passionsButtonRef}
-            onClick={() => setIsPassionsOpen(!isPassionsOpen)}
-            onMouseEnter={() => {
-              if (hoverTimeoutRef.current) {
-                clearTimeout(hoverTimeoutRef.current);
-                hoverTimeoutRef.current = null;
-              }
-              setIsPassionsOpen(true);
-            }}
-            className={`relative group font-medium transition-colors text-sm xl:text-base flex items-center gap-1 ${
-              darkMode ? 'text-gray-200 hover:text-purple-300' : 'text-gray-700 hover:text-pink-500'
-            }`}
+            onClick={() => setIsPassionsOpen((open) => !open)}
+            aria-expanded={isPassionsOpen}
+            aria-haspopup="true"
+            className={`${linkClass} flex items-center gap-1`}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
@@ -219,133 +171,96 @@ export default function Navbar({ scrollToSection, sections }: NavbarProps) {
               animate={{ rotate: isPassionsOpen ? 180 : 0 }}
               transition={{ duration: 0.2 }}
               className="text-xs"
+              aria-hidden="true"
             >
               ▼
             </motion.span>
-            <span 
-              className={`absolute left-0 -bottom-1 w-0 h-0.5 transition-all group-hover:w-full ${
-                darkMode ? 'bg-purple-300' : 'bg-pink-500'
-              }`}
-            ></span>
+            <span className={underlineClass} />
           </motion.button>
 
           <AnimatePresence>
             {isPassionsOpen && (
               <motion.div
-                ref={passionsDropdownRef}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
-                className={`absolute top-full left-0 mt-2 w-48 rounded-xl shadow-xl border ${
-                  darkMode 
-                    ? 'bg-gray-800/95 border-gray-700/50 backdrop-blur-md' 
-                    : 'bg-white/95 border-gray-200/50 backdrop-blur-md'
-                }`}
-                onMouseEnter={() => {
-                  if (hoverTimeoutRef.current) {
-                    clearTimeout(hoverTimeoutRef.current);
-                    hoverTimeoutRef.current = null;
-                  }
-                }}
+                className={`absolute top-full left-0 mt-2 w-48 overflow-hidden ${panelClass}`}
               >
                 <button
-                  onClick={() => {
-                    scrollToSection && scrollToSection(4); // Passions is index 4
-                    setIsPassionsOpen(false);
-                  }}
-                  className={`flex items-center gap-3 px-4 py-3 transition-colors border-b cursor-pointer w-full text-left ${
-                    darkMode 
-                      ? 'hover:bg-gray-700/50 text-gray-200 hover:text-purple-300 border-gray-700/50' 
-                      : 'hover:bg-gray-100/50 text-gray-700 hover:text-pink-500 border-gray-200/50'
-                  } rounded-t-xl`}
+                  onClick={() => goToSection(sectionIndex('passions'))}
+                  className={`${menuItemClass} border-b border-gray-200/50 dark:border-gray-700/50`}
                 >
-                  <span className="text-lg"></span>
                   <span className="font-medium text-sm">Passions Section</span>
                 </button>
-                {passionPages.map((passion, index) => (
+                {passions.map((passion) => (
                   <Link
                     key={passion.href}
                     href={passion.href}
-                    className={`flex items-center gap-3 px-4 py-3 transition-colors ${
-                      darkMode 
-                        ? 'hover:bg-gray-700/50 text-gray-200 hover:text-purple-300' 
-                        : 'hover:bg-gray-100/50 text-gray-700 hover:text-pink-500'
-                    } ${index === passionPages.length - 1 ? 'rounded-b-xl' : ''}`}
+                    className={menuItemClass}
                     onClick={() => setIsPassionsOpen(false)}
                   >
-                    <span className="text-lg">{passion.icon}</span>
-                    <span className="font-medium text-sm">{passion.label}</span>
+                    <span className="text-lg" aria-hidden="true">
+                      {passion.icon}
+                    </span>
+                    <span className="font-medium text-sm">{passion.title}</span>
                   </Link>
                 ))}
               </motion.div>
             )}
           </AnimatePresence>
         </div>
-        
-        {/* Blog Link */}
+
         <motion.button
-          onClick={() => scrollToSection && scrollToSection(5)} // Blog is index 5
-          className={`relative group font-medium transition-colors text-sm xl:text-base cursor-pointer ${
-            darkMode ? 'text-gray-200 hover:text-purple-300' : 'text-gray-700 hover:text-pink-500'
-          }`}
+          onClick={() => goToSection(sectionIndex('blog'))}
+          className={linkClass}
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
           whileHover={{ scale: 1.05 }}
         >
           Blog
-          <span 
-            className={`absolute left-0 -bottom-1 w-0 h-0.5 transition-all group-hover:w-full ${
-              darkMode ? 'bg-purple-300' : 'bg-pink-500'
-            }`}
-          ></span>
+          <span className={underlineClass} />
         </motion.button>
-        
+
         <motion.button
           onClick={toggleTheme}
-          className={`ml-2 xl:ml-4 p-2 border rounded-full text-lg transition-colors ${
-            darkMode 
-              ? 'bg-gray-800 border-gray-600 hover:bg-gray-700 text-yellow-300'
-              : 'bg-gray-100 border-gray-300 hover:bg-gray-200 text-blue-600'
-          }`}
+          aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+          className={`ml-2 xl:ml-4 ${iconButtonClass}`}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >
-          {darkMode ? "☀️" : "🌙"}
+          <span aria-hidden="true">{darkMode ? '☀️' : '🌙'}</span>
         </motion.button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile controls */}
       <div className="lg:hidden flex items-center gap-2">
         <motion.button
           onClick={toggleTheme}
-          className={`p-2 border rounded-full text-lg transition-colors ${
-            darkMode 
-              ? 'bg-gray-800 border-gray-600 hover:bg-gray-700 text-yellow-300'
-              : 'bg-gray-100 border-gray-300 hover:bg-gray-200 text-blue-600'
-          }`}
+          aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+          className={iconButtonClass}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >
-          {darkMode ? "☀️" : "🌙"}
+          <span aria-hidden="true">{darkMode ? '☀️' : '🌙'}</span>
         </motion.button>
-        
+
         <motion.button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className={`p-2 border rounded-full transition-colors ${
-            darkMode 
-              ? 'bg-gray-800 border-gray-600 hover:bg-gray-700 text-gray-200'
-              : 'bg-gray-100 border-gray-300 hover:bg-gray-200 text-gray-700'
-          }`}
+          onClick={() => setIsMobileMenuOpen((open) => !open)}
+          aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={isMobileMenuOpen}
+          className="p-2 border rounded-full transition-colors bg-gray-100 border-gray-300 hover:bg-gray-200 text-gray-700 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:text-gray-200"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >
-          <span className="text-lg">☰</span>
+          <span className="text-lg" aria-hidden="true">
+            ☰
+          </span>
         </motion.button>
       </div>
 
-      {/* Mobile Dropdown Menu */}
+      {/* Mobile menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -354,50 +269,31 @@ export default function Navbar({ scrollToSection, sections }: NavbarProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className={`absolute top-full left-0 right-0 mt-2 mx-4 rounded-xl shadow-xl border lg:hidden z-[60] ${
-              darkMode 
-                ? 'bg-gray-800/95 border-gray-700/50 backdrop-blur-md' 
-                : 'bg-white/95 border-gray-200/50 backdrop-blur-md'
-            }`}
+            className={`absolute top-full left-0 right-0 mt-2 mx-4 overflow-hidden lg:hidden z-[60] ${panelClass}`}
           >
-            {links.map((link, index) => (
-              <button
-                key={link.href}
-                onClick={() => {
-                  scrollToSection && scrollToSection(link.sectionIndex);
-                  setIsMobileMenuOpen(false);
-                }}
-                className={`block px-4 py-3 transition-colors cursor-pointer w-full text-left ${
-                  darkMode 
-                    ? 'hover:bg-gray-700/50 text-gray-200 hover:text-purple-300' 
-                    : 'hover:bg-gray-100/50 text-gray-700 hover:text-pink-500'
-                } ${index === 0 ? 'rounded-t-xl' : ''}`}
-              >
-                {link.label}
+            {navLinks.map((link) => (
+              <button key={link.id} onClick={() => goToSection(link.index)} className={menuItemClass}>
+                {link.navLabel}
               </button>
             ))}
-            
-            {/* Mobile Passions Dropdown */}
-            <div className={`border-t ${darkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
+
+            <div className="border-t border-gray-200/50 dark:border-gray-700/50">
               <button
-                ref={passionsButtonRef}
-                onClick={() => setIsPassionsOpen(!isPassionsOpen)}
-                className={`w-full flex items-center justify-between px-4 py-3 transition-colors ${
-                  darkMode 
-                    ? 'hover:bg-gray-700/50 text-gray-200 hover:text-purple-300' 
-                    : 'hover:bg-gray-100/50 text-gray-700 hover:text-pink-500'
-                }`}
+                onClick={() => setIsPassionsOpen((open) => !open)}
+                aria-expanded={isPassionsOpen}
+                className={`${menuItemClass} justify-between`}
               >
                 <span className="font-medium">Passions</span>
                 <motion.span
                   animate={{ rotate: isPassionsOpen ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
                   className="text-xs"
+                  aria-hidden="true"
                 >
                   ▼
                 </motion.span>
               </button>
-              
+
               <AnimatePresence>
                 {isPassionsOpen && (
                   <motion.div
@@ -408,56 +304,34 @@ export default function Navbar({ scrollToSection, sections }: NavbarProps) {
                     className="overflow-hidden"
                   >
                     <button
-                      onClick={() => {
-                        scrollToSection && scrollToSection(4); // Passions is index 4
-                        setIsPassionsOpen(false);
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className={`flex items-center gap-3 px-6 py-3 transition-colors border-b cursor-pointer w-full text-left ${
-                        darkMode 
-                          ? 'hover:bg-gray-700/50 text-gray-200 hover:text-purple-300 border-gray-700/50' 
-                          : 'hover:bg-gray-100/50 text-gray-700 hover:text-pink-500 border-gray-200/50'
-                      }`}
+                      onClick={() => goToSection(sectionIndex('passions'))}
+                      className={`${menuItemClass} pl-6 border-b border-gray-200/50 dark:border-gray-700/50`}
                     >
-                      <span className="text-lg"></span>
                       <span className="font-medium text-sm">Passions Section</span>
                     </button>
-                    {passionPages.map((passion, index) => (
+                    {passions.map((passion) => (
                       <Link
                         key={passion.href}
                         href={passion.href}
-                        className={`flex items-center gap-3 px-6 py-3 transition-colors ${
-                          darkMode 
-                            ? 'hover:bg-gray-700/50 text-gray-200 hover:text-purple-300' 
-                            : 'hover:bg-gray-100/50 text-gray-700 hover:text-pink-500'
-                        } ${index === passionPages.length - 1 ? 'rounded-b-xl' : ''}`}
+                        className={`${menuItemClass} pl-6`}
                         onClick={() => {
                           setIsPassionsOpen(false);
                           setIsMobileMenuOpen(false);
                         }}
                       >
-                        <span className="text-lg">{passion.icon}</span>
-                        <span className="font-medium text-sm">{passion.label}</span>
+                        <span className="text-lg" aria-hidden="true">
+                          {passion.icon}
+                        </span>
+                        <span className="font-medium text-sm">{passion.title}</span>
                       </Link>
                     ))}
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
-            
-            {/* Mobile Blog Link */}
-            <div className={`border-t ${darkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
-              <button
-                onClick={() => {
-                  scrollToSection && scrollToSection(5); // Blog is index 5
-                  setIsMobileMenuOpen(false);
-                }}
-                className={`block px-4 py-3 transition-colors rounded-b-xl cursor-pointer w-full text-left ${
-                  darkMode 
-                    ? 'hover:bg-gray-700/50 text-gray-200 hover:text-purple-300' 
-                    : 'hover:bg-gray-100/50 text-gray-700 hover:text-pink-500'
-                }`}
-              >
+
+            <div className="border-t border-gray-200/50 dark:border-gray-700/50">
+              <button onClick={() => goToSection(sectionIndex('blog'))} className={menuItemClass}>
                 Blog
               </button>
             </div>

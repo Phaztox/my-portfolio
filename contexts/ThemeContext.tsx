@@ -1,5 +1,5 @@
 // contexts/ThemeContext.tsx
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState, ReactNode } from 'react';
 
 interface ThemeContextType {
   darkMode: boolean;
@@ -8,51 +8,50 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [darkMode, setDarkMode] = useState(false);
-  const [mounted, setMounted] = useState(false);
+/**
+ * Runs before first paint (see `themeInitScript` below), so the `.dark` class
+ * is already on <html> when the CSS is applied and there is no light-mode
+ * flash. React state then syncs to whatever that script decided.
+ */
+export const THEME_INIT_SCRIPT = `
+(function(){try{
+  var stored = localStorage.getItem('theme');
+  var dark = stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  var root = document.documentElement;
+  root.classList.toggle('dark', dark);
+  root.style.colorScheme = dark ? 'dark' : 'light';
+}catch(e){}})();
+`.trim();
 
-  // Prevent hydration mismatch
+export function ThemeProvider({ children }: { children: ReactNode }) {
+  // Starts false so the server render and the first client render agree; the
+  // effect below immediately adopts whatever the pre-paint script chose.
+  const [darkMode, setDarkMode] = useState(false);
+
   useEffect(() => {
-    setMounted(true);
+    setDarkMode(document.documentElement.classList.contains('dark'));
   }, []);
 
-  // Initialize theme
-  useEffect(() => {
-    if (mounted) {
-      const savedTheme = localStorage.getItem('theme');
-      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      
-      const shouldBeDark = savedTheme === 'dark' || (!savedTheme && systemPrefersDark);
-      
-      setDarkMode(shouldBeDark);
-      updateTheme(shouldBeDark);
-    }
-  }, [mounted]);
+  const toggleTheme = useCallback(() => {
+    setDarkMode((previous) => {
+      const next = !previous;
+      const root = document.documentElement;
 
-  const updateTheme = (isDark: boolean) => {
-    const html = document.documentElement;
-    if (isDark) {
-      html.classList.add('dark');
-      html.style.colorScheme = 'dark';
-    } else {
-      html.classList.remove('dark');
-      html.style.colorScheme = 'light';
-    }
-  };
+      root.classList.toggle('dark', next);
+      root.style.colorScheme = next ? 'dark' : 'light';
 
-  const toggleTheme = () => {
-    const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
-    localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
-    updateTheme(newDarkMode);
-  };
+      try {
+        localStorage.setItem('theme', next ? 'dark' : 'light');
+      } catch {
+        // Private browsing or blocked storage — the toggle still works for
+        // this session, it just won't be remembered.
+      }
 
-  return (
-    <ThemeContext.Provider value={{ darkMode, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+      return next;
+    });
+  }, []);
+
+  return <ThemeContext.Provider value={{ darkMode, toggleTheme }}>{children}</ThemeContext.Provider>;
 }
 
 export function useTheme() {
