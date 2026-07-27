@@ -1,40 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Antonin Gabet — Portfolio
 
-## Getting Started
+Personal portfolio built with **Next.js (Pages Router)**, **TypeScript**, **Tailwind CSS v4** and **Framer Motion**.
+Deployed on Vercel: every push to `master` triggers a new deployment.
 
-First, run the development server:
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # production build
+npm run lint     # ESLint (flat config)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project layout
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```
+data/          All site content — edit here, not in the components
+  site.ts        Name, role, links, CV URLs, brand palette
+  sections.ts    Homepage sections (ids, labels, nav labels)
+  about.ts       "About Me" paragraphs
+  timeline.ts    Education timeline
+  projects.ts    Project cards
+  passions.ts    Passion cards + navbar dropdown
+  posts.ts       Blog index (a post without `href` renders as "work in progress")
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+components/    UI. SubPageLayout provides the shared chrome for passion/blog pages
+hooks/         useActiveSection — observes which section is in view
+contexts/      ThemeContext — class-based dark mode, applied before first paint
+pages/         Routes. sitemap.xml and api/og are generated
+styles/        globals.css — design tokens, fluid type scale, scroll-snap
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+### Adding content
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **A project / passion / blog entry** — add an object to the matching file in `data/`.
+- **A blog post page** — create `pages/blog/<slug>.tsx` using `SubPageLayout` with
+  `variant="article"`, then add the entry to `data/posts.ts` with a matching `href`.
+  The sitemap picks it up automatically.
 
-## Learn More
+## Design system
 
-To learn more about Next.js, take a look at the following resources:
+Tailwind v4 is configured entirely from CSS — there is no `tailwind.config.js`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+- **Brand palette** — `@theme` in `styles/globals.css` exposes `bg-pastel-pink`,
+  `bg-pastel-purple`, `bg-pastel-orange`, etc.
+- **Semantic tokens** — `text-ink`, `text-ink-soft`, `text-ink-muted`, `bg-surface`,
+  `border-border-soft` flip automatically between light and dark. Prefer these over
+  writing `darkMode ? … : …` in components.
+- **Dark mode** — driven by the `.dark` class on `<html>`. `@custom-variant dark`
+  in `globals.css` is what makes `dark:` utilities follow the in-page toggle rather
+  than the OS setting; without it Tailwind v4 defaults to `prefers-color-scheme`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Scrolling
 
-## Deploy on Vercel
+The homepage sections snap via CSS (`scroll-snap-type: y proximity` on
+`html.snap-sections`). Scrolling is never taken over in JavaScript, so trackpad,
+wheel, touch and keyboard all behave natively. `useActiveSection` only observes
+which section is in view to drive the side indicator.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## SEO
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+`components/Seo.tsx` renders the title, description, canonical URL and Open Graph /
+Twitter cards for every page. Social preview images are generated at `/api/og`, and
+`/sitemap.xml` is built from the `data/` files.

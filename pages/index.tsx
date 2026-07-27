@@ -1,143 +1,74 @@
-// pages/index.tsx - SINGLE SCROLLING EXPERIENCE
-import { useEffect } from 'react';
-import { useSectionScroll } from '@/hooks/useSectionScroll';
-import { useTheme } from "@/contexts/ThemeContext";
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import About from "@/components/About";
-import Resume from "@/components/Resume";
-import Projects from "@/components/Projects";
-import Blog from "@/components/Blog";
-import Passions from "@/components/Passions";
-import Footer from "@/components/Footer";
-import SectionIndicator from "@/components/SectionIndicator";
-import ScrollHint from "@/components/ScrollHint";
+// pages/index.tsx — one page, six snap-scrolling sections.
+import { useActiveSection } from '@/hooks/useActiveSection';
+import Seo from '@/components/Seo';
+import Navbar from '@/components/Navbar';
+import Hero from '@/components/Hero';
+import About from '@/components/About';
+import Resume from '@/components/Resume';
+import Projects from '@/components/Projects';
+import Blog from '@/components/Blog';
+import Passions from '@/components/Passions';
+import Footer from '@/components/Footer';
+import SectionIndicator from '@/components/SectionIndicator';
+import ScrollHint from '@/components/ScrollHint';
+import { sectionIndex } from '@/data/sections';
+
+/** Ambient blurred orbs behind the content. The `.orb` rules in globals.css
+ *  pick the light or dark colour from these custom properties. */
+const orbs = [
+  { className: 'top-1/4 left-1/4 w-96 h-96 blur-3xl', light: '#F7A8B8', dark: '#7c3aed', lightOpacity: 0.25, darkOpacity: 0.08, delay: '0s', duration: '20s' },
+  { className: 'bottom-1/4 right-1/4 w-80 h-80 blur-3xl', light: '#CBB3EE', dark: '#ec4899', lightOpacity: 0.3, darkOpacity: 0.1, delay: '7s', duration: '25s' },
+  { className: 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 blur-2xl', light: '#FFB347', dark: '#f59e0b', lightOpacity: 0.2, darkOpacity: 0.06, delay: '14s', duration: '18s' },
+  { className: 'top-3/4 left-1/6 w-72 h-72 blur-3xl', light: '#87CEEB', dark: '#06b6d4', lightOpacity: 0.18, darkOpacity: 0.05, delay: '21s', duration: '22s' },
+  { className: 'top-1/6 right-1/6 w-56 h-56 blur-2xl', light: '#98FB98', dark: '#10b981', lightOpacity: 0.22, darkOpacity: 0.07, delay: '10s', duration: '26s' },
+];
 
 export default function Home() {
-  const { currentSection, sections, scrollToSection, isMobile } = useSectionScroll();
-  const { darkMode } = useTheme();
-
-  useEffect(() => {
-    // Disable default scroll behavior for the smooth section scrolling on desktop
-    document.documentElement.style.scrollBehavior = isMobile ? 'auto' : 'smooth';
-    
-    // Set background colors to prevent white/black bar artifacts during transitions
-    const bgColor = darkMode 
-      ? 'linear-gradient(to bottom right, rgb(17, 24, 39), rgba(88, 28, 135, 0.3), rgba(49, 46, 129, 0.3))'
-      : 'linear-gradient(to bottom right, rgb(243, 232, 255), rgb(251, 207, 232), rgb(199, 210, 254))';
-    
-    document.documentElement.style.background = bgColor;
-    document.body.style.background = bgColor;
-    document.documentElement.style.margin = '0';
-    document.documentElement.style.padding = '0';
-    document.body.style.margin = '0';
-    document.body.style.padding = '0';
-    
-    // On desktop, completely disable scrolling since we handle it manually
-    if (!isMobile) {
-      document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-      document.documentElement.style.overflow = 'auto';
-    }
-    
-    // Add main-scrollbar class to body for colored scrollbar
-    document.body.classList.add('main-scrollbar');
-    
-    return () => {
-      document.body.style.overflow = 'auto';
-      document.documentElement.style.overflow = 'auto';
-      document.body.classList.remove('main-scrollbar');
-      // Reset backgrounds
-      document.documentElement.style.background = '';
-      document.body.style.background = '';
-    };
-  }, [isMobile, darkMode]);
+  const { currentSection, scrollToSection } = useActiveSection();
 
   return (
-    <div className={`min-h-screen w-full relative transition-all duration-300 m-0 p-0 ${
-      darkMode ? 'bg-gradient-to-br from-gray-900 via-purple-900/30 to-indigo-900/30' : 'bg-gradient-to-br from-purple-100 via-pink-100 to-indigo-200'
-    }`}>
-      {/* Floating background elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div 
-          className={`absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl transition-opacity duration-1000 animate-float ${
-            darkMode ? 'opacity-8' : 'opacity-25'
-          }`}
-          style={{ 
-            backgroundColor: darkMode ? '#7c3aed' : '#F7A8B8',
-            animationDelay: '0s',
-            animationDuration: '20s'
-          }}
-        />
-        <div 
-          className={`absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-3xl transition-opacity duration-1000 animate-float ${
-            darkMode ? 'opacity-10' : 'opacity-30'
-          }`}
-          style={{ 
-            backgroundColor: darkMode ? '#ec4899' : '#CBB3EE',
-            animationDelay: '7s',
-            animationDuration: '25s'
-          }}
-        />
-        <div 
-          className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full blur-2xl transition-opacity duration-1000 animate-float ${
-            darkMode ? 'opacity-6' : 'opacity-20'
-          }`}
-          style={{ 
-            backgroundColor: darkMode ? '#f59e0b' : '#FFB347',
-            animationDelay: '14s',
-            animationDuration: '18s'
-          }}
-        />
-        {/* Additional floating elements for better coverage */}
-        <div 
-          className={`absolute top-3/4 left-1/6 w-72 h-72 rounded-full blur-3xl transition-opacity duration-1000 animate-float ${
-            darkMode ? 'opacity-5' : 'opacity-18'
-          }`}
-          style={{ 
-            backgroundColor: darkMode ? '#06b6d4' : '#87CEEB',
-            animationDelay: '21s',
-            animationDuration: '22s'
-          }}
-        />
-        <div 
-          className={`absolute top-1/6 right-1/6 w-56 h-56 rounded-full blur-2xl transition-opacity duration-1000 animate-float ${
-            darkMode ? 'opacity-7' : 'opacity-22'
-          }`}
-          style={{ 
-            backgroundColor: darkMode ? '#10b981' : '#98FB98',
-            animationDelay: '10s',
-            animationDuration: '26s'
-          }}
-        />
+    <>
+      <Seo />
+
+      <div className="min-h-screen w-full relative bg-gradient-to-br from-purple-100 via-pink-100 to-indigo-200 dark:from-gray-900 dark:via-purple-900/30 dark:to-indigo-900/30">
+        {/* Floating background elements */}
+        <div className="fixed inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
+          {orbs.map((orb, i) => (
+            <div
+              key={i}
+              className={`orb absolute rounded-full animate-float ${orb.className}`}
+              style={
+                {
+                  '--orb-light': orb.light,
+                  '--orb-dark': orb.dark,
+                  '--orb-light-opacity': orb.lightOpacity,
+                  '--orb-dark-opacity': orb.darkOpacity,
+                  animationDelay: orb.delay,
+                  animationDuration: orb.duration,
+                } as React.CSSProperties
+              }
+            />
+          ))}
+        </div>
+
+        <Navbar scrollToSection={scrollToSection} />
+
+        <SectionIndicator currentSection={currentSection} onSectionClick={scrollToSection} />
+
+        <ScrollHint show={currentSection === 0} />
+
+        {/* pb-20 keeps the last section clear of the fixed footer. */}
+        <main className="relative z-10 pb-20">
+          <Hero onExplore={() => scrollToSection(sectionIndex('about'))} />
+          <About />
+          <Resume />
+          <Projects />
+          <Passions />
+          <Blog />
+        </main>
+
+        <Footer />
       </div>
-      
-      <Navbar scrollToSection={scrollToSection} sections={sections} />
-      
-      {/* Section Navigation Indicator */}
-      <SectionIndicator 
-        currentSection={currentSection}
-        sections={sections}
-        onSectionClick={scrollToSection}
-      />
-      
-      {/* Scroll Hint - only show on first section and on desktop */}
-      <ScrollHint show={currentSection === 0 && !isMobile} />
-      
-      {/* Scrolling sections */}
-      <div className="relative z-10 pb-20"> {/* Add padding for footer */}
-        <Hero scrollToSection={scrollToSection} />
-        <About />
-        <Resume />
-        <Projects />
-        <Passions />
-        <Blog />
-      </div>
-      
-      {/* Always visible footer */}
-      <Footer />
-    </div>
+    </>
   );
 }

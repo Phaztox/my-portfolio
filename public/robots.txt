@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://antonin-gabet-portfolio.vercel.app/sitemap.xml

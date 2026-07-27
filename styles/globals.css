@@ -1,84 +1,121 @@
 /* my-portfolio/styles/globals.css */
 @import "tailwindcss";
 
+/* Dark mode is driven by the `.dark` class that ThemeContext puts on <html>.
+   Without this, Tailwind v4 compiles `dark:` to prefers-color-scheme and the
+   in-page toggle silently does nothing. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Brand palette */
+  --color-pastel-pink: #f7a8b8;
+  --color-pastel-pink-dark: #ec4899;
+  --color-pastel-orange: #ffb347;
+  --color-pastel-orange-dark: #f59e0b;
+  --color-pastel-purple: #cbb3ee;
+  --color-pastel-purple-dark: #a855f7;
+  --color-pastel-sky: #87ceeb;
+  --color-pastel-mint: #98fb98;
+}
+
+/* Semantic tokens. These flip with the theme class, so components can use
+   `bg-surface` / `text-ink` instead of a `darkMode ? … : …` ternary. */
+:root {
+  --ui-ink: #111827;
+  --ui-ink-soft: #374151;
+  --ui-ink-muted: #4b5563;
+  --ui-surface: rgb(255 255 255 / 0.8);
+  --ui-surface-solid: rgb(255 255 255 / 0.95);
+  --ui-border: rgb(229 231 235 / 0.6);
+  --ui-accent: #ec4899;
+}
+
+.dark {
+  --ui-ink: #ffffff;
+  --ui-ink-soft: #e5e7eb;
+  --ui-ink-muted: #d1d5db;
+  --ui-surface: rgb(31 41 55 / 0.7);
+  --ui-surface-solid: rgb(17 24 39 / 0.95);
+  --ui-border: rgb(55 65 81 / 0.6);
+  --ui-accent: #c084fc;
+}
+
+@theme inline {
+  --color-ink: var(--ui-ink);
+  --color-ink-soft: var(--ui-ink-soft);
+  --color-ink-muted: var(--ui-ink-muted);
+  --color-surface: var(--ui-surface);
+  --color-surface-solid: var(--ui-surface-solid);
+  --color-border-soft: var(--ui-border);
+  --color-accent: var(--ui-accent);
+}
+
 html {
-  scroll-behavior: smooth;
   color-scheme: light dark;
   margin: 0;
   padding: 0;
-  background: transparent;
+  /* Matches the top of the page gradient so overscroll never flashes a white
+     or black bar. Previously this was patched from JS on every render. */
+  background-color: #f3e8ff;
+  /* Keeps anchor jumps clear of the fixed navbar. */
+  scroll-padding-top: 5rem;
+}
+
+html.dark {
+  background-color: rgb(17 24 39);
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-sans);
   overflow-x: hidden;
   margin: 0;
   padding: 0;
   background: transparent;
 }
 
-/* Custom animations */
-@keyframes float {
-  0%, 100% { 
-    transform: translateY(0px) translateX(0px) scale(1);
+/* ------------------------------------------------------------------ */
+/* Section scrolling                                                    */
+/* ------------------------------------------------------------------ */
+
+/* The homepage opts in by putting `snap-sections` on <html>. Sub-pages scroll
+   normally. */
+html.snap-sections {
+  scroll-snap-type: y proximity;
+  scroll-behavior: smooth;
+}
+
+/* Firmer section-to-section snapping on mouse/trackpad, where a section
+   reliably fits the viewport. Touch keeps `proximity` so a long section on a
+   small screen can never feel like it is fighting the swipe.
+   (A section taller than the viewport is never snapped by the spec, so
+   overflowing content stays reachable either way.) */
+@media (hover: hover) and (pointer: fine) and (min-height: 640px) {
+  html.snap-sections {
+    scroll-snap-type: y mandatory;
   }
-  25% { 
-    transform: translateY(-20px) translateX(10px) scale(1.05);
-  }
-  50% { 
-    transform: translateY(-40px) translateX(0px) scale(1.1);
-  }
-  75% { 
-    transform: translateY(-20px) translateX(-10px) scale(1.05);
+
+  /* Stop at every section rather than letting a fast flick skip past two or
+     three — this is what brings back the one-section-per-gesture feel. */
+  html.snap-sections .section-container {
+    scroll-snap-stop: always;
   }
 }
 
-@keyframes slideInFromBottom {
-  from {
-    transform: translateY(100vh) scale(0.8);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-}
-
-@keyframes slideInFromLeft {
-  from {
-    transform: translateX(-100vw) rotateY(-45deg);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0) rotateY(0deg);
-    opacity: 1;
-  }
-}
-
-@keyframes slideInFromRight {
-  from {
-    transform: translateX(100vw) rotateY(45deg);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0) rotateY(0deg);
-    opacity: 1;
-  }
-}
-
-.animate-float {
-  animation: float ease-in-out infinite;
-}
-
-/* Smooth section transitions */
 .section-container {
   min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   align-items: center;
   position: relative;
-  scroll-snap-align: start;
   padding-top: 2rem;
   padding-bottom: 2rem;
+}
+
+html.snap-sections .section-container {
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
 }
 
 /* Responsive section padding based on screen height */
@@ -86,7 +123,6 @@ body {
   .section-container {
     padding-top: 1rem;
     padding-bottom: 1rem;
-    min-height: 100vh;
   }
 }
 
@@ -112,14 +148,75 @@ body {
   }
 }
 
-/* Main content container for snap scrolling */
-.snap-container {
-  scroll-snap-type: y mandatory;
-  overflow-y: scroll;
-  height: 100vh;
+/* ------------------------------------------------------------------ */
+/* Animations                                                           */
+/* ------------------------------------------------------------------ */
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) scale(1);
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px) scale(1.05);
+  }
+  50% {
+    transform: translateY(-40px) translateX(0px) scale(1.1);
+  }
+  75% {
+    transform: translateY(-20px) translateX(-10px) scale(1.05);
+  }
 }
 
-/* Custom responsive text sizing based on viewport height to prevent vertical overflow */
+.animate-float {
+  animation: float ease-in-out infinite;
+}
+
+/* Ambient background orbs. Each element supplies its own colours via inline
+   custom properties; these rules pick the right pair for the active theme. */
+.orb {
+  background-color: var(--orb-light);
+  opacity: var(--orb-light-opacity);
+  transition: opacity 1s ease, background-color 1s ease;
+}
+
+.dark .orb {
+  background-color: var(--orb-dark);
+  opacity: var(--orb-dark-opacity);
+}
+
+/* Respect the OS "reduce motion" setting: kill the ambient animation loops
+   and the smooth-scroll easing, keep everything readable and in place. */
+@media (prefers-reduced-motion: reduce) {
+  html,
+  html.snap-sections {
+    scroll-behavior: auto;
+    scroll-snap-type: none;
+  }
+
+  .animate-float {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Visible keyboard focus everywhere. */
+:focus-visible {
+  outline: 2px solid var(--ui-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Fluid type + spacing scale                                           */
+/* ------------------------------------------------------------------ */
+
 .text-responsive-hero {
   font-size: clamp(3.5rem, min(6.5vw, 8vh), 7.5rem);
   line-height: 1.1;
@@ -128,7 +225,7 @@ body {
 .text-responsive-subtitle {
   font-size: clamp(1.5rem, min(2.2vw, 3vh), 2.5rem);
   line-height: 1.3;
-  white-space: nowrap;
+  text-wrap: balance;
 }
 
 .text-responsive-heading {
@@ -178,7 +275,6 @@ body {
   gap: clamp(1rem, min(1.5vw, 2vh), 1.5rem);
 }
 
-/* Responsive component dimensions */
 /* Buttons and interactive elements - more prominent for hero */
 .responsive-button-padding {
   padding: clamp(0.75rem, min(1.2vw, 1.5vh), 1.25rem) clamp(2rem, min(3vw, 4vh), 3rem);
@@ -188,7 +284,7 @@ body {
   gap: clamp(1.25rem, min(2vw, 2.5vh), 2rem);
 }
 
-/* Cards and containers - minimal increases */
+/* Cards and containers */
 .responsive-card-padding {
   padding: clamp(1.5rem, min(2vw, 2.5vh), 3rem);
 }
@@ -201,7 +297,7 @@ body {
   border-radius: clamp(0.75rem, min(1vw, 1.2vh), 1.5rem);
 }
 
-/* Grid and layout spacing - conservative */
+/* Grid and layout spacing */
 .responsive-grid-gap {
   gap: clamp(1.5rem, min(2vw, 2.5vh), 2.5rem);
 }
@@ -210,7 +306,7 @@ body {
   padding: clamp(1rem, min(1.5vw, 2vh), 2rem) clamp(1rem, min(1.5vw, 2vh), 2rem);
 }
 
-/* Timeline and list spacing - smaller increments */
+/* Timeline and list spacing */
 .responsive-timeline-space {
   margin-bottom: clamp(1rem, min(1.5vw, 2vh), 2rem);
 }
@@ -219,7 +315,7 @@ body {
   padding-left: clamp(2rem, min(3vw, 3.5vh), 3rem);
 }
 
-/* Project card dimensions - keep original proportions */
+/* Project card dimensions */
 .responsive-project-height {
   height: clamp(6rem, min(8vw, 8vh), 8rem);
 }
@@ -233,7 +329,7 @@ body {
   font-size: clamp(1.25rem, min(2vw, 2.5vh), 2rem);
 }
 
-/* Badge and chip sizing - minimal changes */
+/* Badge and chip sizing */
 .responsive-badge-padding {
   padding: clamp(0.25rem, min(0.5vw, 0.6vh), 0.5rem) clamp(0.75rem, min(1vw, 1.2vh), 1rem);
 }
@@ -247,49 +343,41 @@ body {
   .text-responsive-hero {
     font-size: clamp(4.5rem, min(5.5vw, 6vh), 6.5rem);
   }
-  
+
   .text-responsive-heading {
     font-size: clamp(2.5rem, min(3vw, 3.5vh), 3.5rem);
   }
-  
+
   .text-responsive-subtitle {
     font-size: clamp(1.75rem, min(2vw, 2.5vh), 2rem);
   }
-  
+
   .text-responsive-body {
     font-size: clamp(1rem, min(1.1vw, 1.6vh), 1.1rem);
   }
-  
-  /* Component size adjustments for ultra-wide */
+
   .responsive-card-padding {
     padding: clamp(1.5rem, min(2.5vw, 3.5vh), 4rem);
   }
-  
+
   .responsive-project-height {
     height: clamp(5rem, min(7vw, 9vh), 10rem);
   }
 }
 
-/* Screen height specific adjustments - make smaller for smaller screens */
+/* Screen height specific adjustments */
 @media (max-height: 720px) {
   .text-responsive-hero {
     font-size: clamp(1.75rem, min(3.5vw, 4.5vh), 3rem);
   }
   .text-responsive-subtitle {
     font-size: clamp(1rem, min(1.5vw, 2vh), 1.5rem);
-    white-space: normal;
   }
   .text-responsive-heading {
     font-size: clamp(1.5rem, min(2.5vw, 3.5vh), 2.25rem);
   }
   .text-responsive-body {
     font-size: clamp(0.75rem, min(1vw, 1.5vh), 0.95rem);
-  }
-}
-
-@media (max-width: 640px) {
-  .text-responsive-subtitle {
-    white-space: normal;
   }
 }
 
@@ -308,29 +396,25 @@ body {
   }
 }
 
-/* Disable scroll snap on touch devices for better mobile experience */
-@media (hover: none) and (pointer: coarse) {
-  .snap-container {
-    scroll-snap-type: none;
-  }
-  .section-container {
-    scroll-snap-align: none;
-  }
-}
+/* ------------------------------------------------------------------ */
+/* Mobile scroll indicator                                              */
+/* ------------------------------------------------------------------ */
 
-/* Mobile scrollbar - CUSTOM OVERLAY APPROACH */
-@media (hover: none) and (pointer: coarse) {
-  /* Hide default scrollbars completely */
-  html, body {
-    scrollbar-width: none !important;
-    -ms-overflow-style: none !important;
+/* `pointer: coarse` alone, rather than pairing it with `hover: none` — some
+   Android browsers report `hover: hover` and were falling through this block
+   entirely, hiding the native scrollbar's replacement along with it. */
+@media (pointer: coarse) {
+  html,
+  body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
-  
+
   html::-webkit-scrollbar,
   body::-webkit-scrollbar {
-    display: none !important;
+    display: none;
   }
-  
+
   /* Custom scrollbar thumb only (no track/railing) */
   body.scrolling::before {
     content: '';
@@ -341,61 +425,32 @@ body {
     height: 50px;
     background: linear-gradient(
       180deg,
-      rgba(247, 168, 184, 0.9) 0%,    /* More visible light pink */
-      rgba(203, 179, 238, 0.8) 50%,   /* More visible light purple */
-      rgba(173, 216, 230, 0.7) 100%   /* More visible light blue */
+      rgb(247 168 184 / 0.9) 0%,
+      rgb(203 179 238 / 0.8) 50%,
+      rgb(173 216 230 / 0.7) 100%
     );
     border-radius: 2px;
-    z-index: 30;  /* Lower than navbar (60) and footer (40) */
+    z-index: 30;
     pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s ease, top 0.1s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  }
-  
-  /* Show custom scrollbar thumb when scrolling */
-  body.scrolling::before {
     opacity: 0.8;
-  }
-  
-  /* Hide all other scrollbars */
-  *:not(html):not(body)::-webkit-scrollbar {
-    display: none !important;
-  }
-  
-  *:not(html):not(body) {
-    scrollbar-width: none !important;
+    transition: opacity 0.3s ease, top 0.1s ease;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.15);
   }
 }
 
-/* Hide scrollbar on desktop for specific pages - more specific targeting */
+/* Sub-pages (passions, blog posts) hide the desktop scrollbar for a cleaner
+   reading surface. Toggled by SubPageLayout via a data attribute. */
 @media (hover: hover) and (pointer: fine) {
-  /* Hide scrollbar on passion pages and blog post */
-  body[data-hide-scrollbar="true"],
-  body[data-hide-scrollbar="true"] *,
-  body[data-hide-scrollbar="true"] html,
-  body[data-hide-scrollbar="true"] div {
-    scrollbar-width: none !important;
-    -ms-overflow-style: none !important;
+  html[data-hide-scrollbar='true'],
+  html[data-hide-scrollbar='true'] body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
-  
-  body[data-hide-scrollbar="true"] ::-webkit-scrollbar,
-  body[data-hide-scrollbar="true"] *::-webkit-scrollbar,
-  body[data-hide-scrollbar="true"] html::-webkit-scrollbar,
-  body[data-hide-scrollbar="true"] div::-webkit-scrollbar {
-    display: none !important;
-    width: 0 !important;
-    height: 0 !important;
-  }
-  
-  /* Ensure content is still scrollable */
-  body[data-hide-scrollbar="true"] {
-    overflow-y: auto !important;
-  }
-  
-  /* Additional targeting for stubborn scrollbars */
-  html[data-hide-scrollbar="true"]::-webkit-scrollbar,
-  html[data-hide-scrollbar="true"] *::-webkit-scrollbar {
-    display: none !important;
+
+  html[data-hide-scrollbar='true']::-webkit-scrollbar,
+  html[data-hide-scrollbar='true'] body::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
   }
 }
