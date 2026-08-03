@@ -33,10 +33,13 @@ export default function Seo({
   const fullTitle = title ? `${title} - ${site.name}` : `${site.name} - Data & AI Portfolio`;
   const canonical = `${site.url}${asPath === '/' ? '' : asPath.split('#')[0].split('?')[0]}`;
 
-  // Falls back to the generated card, with the page title baked in.
-  const defaultImage = `/api/og?title=${encodeURIComponent(title ?? site.name)}&subtitle=${encodeURIComponent(
-    title ? site.role : 'Data & AI - Engineering student at EFREI Paris'
-  )}`;
+  // Falls back to the generated card, with the page title baked in. The
+  // subtitle is always `site.role` - it used to differ between the home page
+  // and every other page, so sharing two links from the same site described
+  // the same person two different ways.
+  const defaultImage = `/api/og?title=${encodeURIComponent(
+    title ?? site.name
+  )}&subtitle=${encodeURIComponent(site.role)}`;
   const resolved = image ?? defaultImage;
   const imageUrl = resolved.startsWith('http') ? resolved : `${site.url}${resolved}`;
 

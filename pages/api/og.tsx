@@ -3,14 +3,16 @@
 // from the same palette as the site.
 import { ImageResponse } from 'next/og';
 import type { NextRequest } from 'next/server';
+import { site } from '@/data/site';
 
 export const config = { runtime: 'edge' };
 
 export default function handler(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const title = searchParams.get('title') ?? 'Antonin Gabet';
-  const subtitle =
-    searchParams.get('subtitle') ?? 'Data & AI - Engineering student at EFREI Paris';
+  // Defaults come from data/site.ts rather than being written out again here,
+  // so there is exactly one description of who this is.
+  const title = searchParams.get('title') ?? site.name;
+  const subtitle = searchParams.get('subtitle') ?? site.role;
 
   return new ImageResponse(
     (
