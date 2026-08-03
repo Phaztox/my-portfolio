@@ -1,10 +1,10 @@
-// components/Seo.tsx — per-page title, description and social cards.
+// components/Seo.tsx - per-page title, description and social cards.
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { site } from '@/data/site';
 
 interface SeoProps {
-  /** Page title. Rendered as "<title> — Antonin Gabet" unless it's the home page. */
+  /** Page title. Rendered as "<title> - Antonin Gabet" unless it's the home page. */
   title?: string;
   description?: string;
   /** Set for blog posts so they share as articles rather than as a website. */
@@ -12,6 +12,12 @@ interface SeoProps {
   /** Absolute or root-relative path to a social preview image. */
   image?: string;
   publishedTime?: string;
+  /**
+   * Keep the page out of search results. Used by whichever design is not the
+   * current default: both designs serve the same content, so indexing both
+   * would put the site in competition with itself for its own keywords.
+   */
+  noindex?: boolean;
 }
 
 export default function Seo({
@@ -20,16 +26,20 @@ export default function Seo({
   type = 'website',
   image,
   publishedTime,
+  noindex = false,
 }: SeoProps) {
   const { asPath } = useRouter();
 
-  const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — Data & AI Portfolio`;
+  const fullTitle = title ? `${title} - ${site.name}` : `${site.name} - Data & AI Portfolio`;
   const canonical = `${site.url}${asPath === '/' ? '' : asPath.split('#')[0].split('?')[0]}`;
 
-  // Falls back to the generated card, with the page title baked in.
-  const defaultImage = `/api/og?title=${encodeURIComponent(title ?? site.name)}&subtitle=${encodeURIComponent(
-    title ? site.role : 'Data & AI — Engineering student at EFREI Paris'
-  )}`;
+  // Falls back to the generated card, with the page title baked in. The
+  // subtitle is always `site.role` - it used to differ between the home page
+  // and every other page, so sharing two links from the same site described
+  // the same person two different ways.
+  const defaultImage = `/api/og?title=${encodeURIComponent(
+    title ?? site.name
+  )}&subtitle=${encodeURIComponent(site.role)}`;
   const resolved = image ?? defaultImage;
   const imageUrl = resolved.startsWith('http') ? resolved : `${site.url}${resolved}`;
 
@@ -40,8 +50,9 @@ export default function Seo({
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta name="author" content={site.name} />
       <link rel="canonical" href={canonical} />
+      {noindex && <meta name="robots" content="noindex, follow" />}
 
-      {/* Open Graph — LinkedIn, Discord, Slack, Facebook */}
+      {/* Open Graph - LinkedIn, Discord, Slack, Facebook */}
       <meta property="og:site_name" content={site.name} />
       <meta property="og:type" content={type} />
       <meta property="og:title" content={fullTitle} />

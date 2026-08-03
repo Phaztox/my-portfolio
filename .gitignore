@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# verification build output
+/.next-verify/
+
+# local-only working notes (never committed, never deployed)
+/notes/

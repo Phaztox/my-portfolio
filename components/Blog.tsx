@@ -1,7 +1,7 @@
 // components/Blog.tsx
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { posts } from '@/data/posts';
+import { posts, postHref } from '@/data/posts';
 
 export default function Blog() {
   return (
@@ -23,11 +23,11 @@ export default function Blog() {
               <>
                 <h3
                   className={`font-semibold text-responsive-card-title mb-2 transition-colors duration-200 text-ink ${
-                    post.href ? 'group-hover:text-purple-600 dark:group-hover:text-purple-400' : ''
+                    post.blocks ? 'group-hover:text-purple-600 dark:group-hover:text-purple-400' : ''
                   }`}
                 >
                   {post.title}
-                  {!post.href && (
+                  {!post.blocks && (
                     <span className="ml-2 align-middle text-xs font-medium uppercase tracking-wide px-2 py-0.5 rounded-full bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300">
                       Work in progress
                     </span>
@@ -46,8 +46,8 @@ export default function Blog() {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.4, delay: i * 0.15 }}
               >
-                {post.href ? (
-                  <Link href={post.href} className="block group">
+                {post.blocks ? (
+                  <Link href={postHref(post.slug, 'classic')} className="block group">
                     {body}
                   </Link>
                 ) : (
