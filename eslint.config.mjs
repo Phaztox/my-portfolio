@@ -15,6 +15,8 @@ const eslintConfig = [
     ignores: [
       "node_modules/**",
       ".next/**",
+      // Output of `npm run build:check` (see scripts/build-verify.mjs).
+      ".next-verify/**",
       "out/**",
       "build/**",
       "next-env.d.ts",

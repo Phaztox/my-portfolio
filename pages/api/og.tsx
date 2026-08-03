@@ -1,4 +1,4 @@
-// pages/api/og.tsx — social preview card, rendered on the edge.
+// pages/api/og.tsx - social preview card, rendered on the edge.
 // Social platforms don't accept SVG for og:image, so this produces a real PNG
 // from the same palette as the site.
 import { ImageResponse } from 'next/og';
@@ -10,7 +10,7 @@ export default function handler(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const title = searchParams.get('title') ?? 'Antonin Gabet';
   const subtitle =
-    searchParams.get('subtitle') ?? 'Data & AI — Engineering student at EFREI Paris';
+    searchParams.get('subtitle') ?? 'Data & AI - Engineering student at EFREI Paris';
 
   return new ImageResponse(
     (

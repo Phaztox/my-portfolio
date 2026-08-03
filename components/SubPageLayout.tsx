@@ -8,6 +8,7 @@ import { ReactNode, useEffect } from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
 import Seo from './Seo';
 import { site } from '@/data/site';
+import { defaultDesign } from '@/data/designs';
 
 export type Accent = 'pink' | 'purple' | 'orange' | 'red' | 'indigo';
 
@@ -93,6 +94,7 @@ export default function SubPageLayout({
         description={description ?? subtitle ?? site.description}
         type={seoType}
         publishedTime={publishedTime}
+        noindex={defaultDesign !== 'classic'}
       />
 
       <div className={`min-h-screen transition-colors duration-300 ${background}`}>

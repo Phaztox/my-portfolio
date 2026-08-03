@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useTheme } from '@/contexts/ThemeContext';
 import { sections, sectionIndex } from '@/data/sections';
-import { passions } from '@/data/passions';
+import { passions, passionHref } from '@/data/passions';
 import { site } from '@/data/site';
 
 interface NavbarProps {
@@ -124,7 +124,7 @@ export default function Navbar({ scrollToSection }: NavbarProps) {
     >
       <motion.button
         onClick={() => goToSection(0)}
-        aria-label={`${site.name} — back to top`}
+        aria-label={`${site.name} - back to top`}
         className="font-bold text-xl sm:text-2xl transition-colors cursor-pointer text-gray-900 hover:text-pink-500 dark:text-white dark:hover:text-purple-300"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -195,8 +195,8 @@ export default function Navbar({ scrollToSection }: NavbarProps) {
                 </button>
                 {passions.map((passion) => (
                   <Link
-                    key={passion.href}
-                    href={passion.href}
+                    key={passion.slug}
+                    href={passionHref(passion.slug, 'classic')}
                     className={menuItemClass}
                     onClick={() => setIsPassionsOpen(false)}
                   >
@@ -226,7 +226,7 @@ export default function Navbar({ scrollToSection }: NavbarProps) {
         <motion.button
           onClick={toggleTheme}
           aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-          className={`ml-2 xl:ml-4 ${iconButtonClass}`}
+          className={iconButtonClass}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >
@@ -311,8 +311,8 @@ export default function Navbar({ scrollToSection }: NavbarProps) {
                     </button>
                     {passions.map((passion) => (
                       <Link
-                        key={passion.href}
-                        href={passion.href}
+                        key={passion.slug}
+                        href={passionHref(passion.slug, 'classic')}
                         className={`${menuItemClass} pl-6`}
                         onClick={() => {
                           setIsPassionsOpen(false);
@@ -335,6 +335,7 @@ export default function Navbar({ scrollToSection }: NavbarProps) {
                 Blog
               </button>
             </div>
+
           </motion.div>
         )}
       </AnimatePresence>

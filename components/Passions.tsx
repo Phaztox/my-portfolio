@@ -1,7 +1,7 @@
 // components/Passions.tsx
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { passions } from '@/data/passions';
+import { passions, passionHref } from '@/data/passions';
 
 export default function Passions() {
   return (
@@ -20,7 +20,7 @@ export default function Passions() {
         <div className="grid md:grid-cols-2 passion-grid-gap">
           {passions.map((passion, i) => (
             <motion.div
-              key={passion.href}
+              key={passion.slug}
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, amount: 0.3 }}
@@ -30,7 +30,7 @@ export default function Passions() {
               className="h-full"
             >
               <Link
-                href={passion.href}
+                href={passionHref(passion.slug, 'classic')}
                 className="group block h-full passion-card-padding backdrop-blur-sm responsive-card-radius shadow-lg hover:shadow-xl transition-all duration-300 transform-gpu bg-surface border border-border-soft"
               >
                 <span

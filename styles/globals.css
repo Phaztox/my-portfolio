@@ -9,6 +9,12 @@
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
+  /* Editorial design typefaces. Loaded only on pages that render that design
+     (see components/editorial/fonts.ts). */
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-prose: var(--font-newsreader), ui-serif, Georgia, serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
+
   /* Brand palette */
   --color-pastel-pink: #f7a8b8;
   --color-pastel-pink-dark: #ec4899;
@@ -20,8 +26,13 @@
   --color-pastel-mint: #98fb98;
 }
 
-/* Semantic tokens. These flip with the theme class, so components can use
-   `bg-surface` / `text-ink` instead of a `darkMode ? … : …` ternary. */
+/* ------------------------------------------------------------------ */
+/* Semantic tokens                                                      */
+/* ------------------------------------------------------------------ */
+/* Two axes drive these: the theme (`.dark` on <html>) and the active design
+   (`data-design` on the design's root element). Components keep writing
+   `text-ink` / `bg-surface` / `border-rule`; each design decides what those
+   mean. Defaults below are the classic pastel design. */
 :root {
   --ui-ink: #111827;
   --ui-ink-soft: #374151;
@@ -29,7 +40,10 @@
   --ui-surface: rgb(255 255 255 / 0.8);
   --ui-surface-solid: rgb(255 255 255 / 0.95);
   --ui-border: rgb(229 231 235 / 0.6);
+  --ui-paper: #f3e8ff;
+  --ui-rule: rgb(229 231 235 / 0.6);
   --ui-accent: #ec4899;
+  --ui-accent-contrast: #ffffff;
 }
 
 .dark {
@@ -39,7 +53,40 @@
   --ui-surface: rgb(31 41 55 / 0.7);
   --ui-surface-solid: rgb(17 24 39 / 0.95);
   --ui-border: rgb(55 65 81 / 0.6);
+  --ui-paper: rgb(17 24 39);
+  --ui-rule: rgb(55 65 81 / 0.6);
   --ui-accent: #c084fc;
+  --ui-accent-contrast: #111827;
+}
+
+/* --- Editorial design ------------------------------------------------ */
+/* Ink on paper, hairline rules, one accent: cinnabar. Warm neutrals rather
+   than pure grey so large areas of paper don't read as clinical. */
+[data-design='editorial'] {
+  --ui-ink: #16130f;
+  --ui-ink-soft: #3d372f;
+  --ui-ink-muted: #6e675e;
+  --ui-paper: #faf8f4;
+  --ui-surface: #f3f0e9;
+  --ui-surface-solid: #faf8f4;
+  --ui-rule: #ded7c9;
+  --ui-border: #ded7c9;
+  --ui-accent: #d8442f;
+  --ui-accent-contrast: #faf8f4;
+}
+
+.dark [data-design='editorial'] {
+  --ui-ink: #f4f1ea;
+  --ui-ink-soft: #cec7bb;
+  --ui-ink-muted: #948c80;
+  --ui-paper: #121110;
+  --ui-surface: #1c1a17;
+  --ui-surface-solid: #121110;
+  --ui-rule: #302c26;
+  --ui-border: #302c26;
+  /* Lifted for legibility against near-black; the light value is too dense. */
+  --ui-accent: #ff6a4d;
+  --ui-accent-contrast: #121110;
 }
 
 @theme inline {
@@ -49,7 +96,10 @@
   --color-surface: var(--ui-surface);
   --color-surface-solid: var(--ui-surface-solid);
   --color-border-soft: var(--ui-border);
+  --color-paper: var(--ui-paper);
+  --color-rule: var(--ui-rule);
   --color-accent: var(--ui-accent);
+  --color-accent-contrast: var(--ui-accent-contrast);
 }
 
 html {
@@ -393,6 +443,183 @@ html.snap-sections .section-container {
   }
   .text-responsive-body {
     font-size: clamp(0.8rem, min(1.1vw, 1.6vh), 1.05rem);
+  }
+}
+
+/* ================================================================== */
+/* EDITORIAL DESIGN                                                     */
+/* ================================================================== */
+/* A print-derived system: one 12-column grid, hairline rules, and a type
+   scale keyed to viewport *width* only. (The classic scale above also keys
+   off height, which makes text resize when you drag a window shorter — it
+   reads as unstable. Not repeating that here.) */
+
+html[data-design='editorial'] {
+  background-color: var(--ui-paper);
+  scroll-padding-top: 6rem;
+}
+
+[data-design='editorial'] {
+  font-family: var(--font-display);
+  font-feature-settings: 'ss01', 'cv01';
+}
+
+/* --- Grid ------------------------------------------------------------ */
+
+.ed-shell {
+  width: 100%;
+  max-width: 90rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 5vw, 5rem);
+}
+
+.ed-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  column-gap: clamp(1rem, 2.5vw, 2rem);
+  row-gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+@media (min-width: 48rem) {
+  .ed-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+
+/* --- Type scale ------------------------------------------------------ */
+
+.ed-display {
+  font-size: clamp(2.75rem, 10.5vw, 9rem);
+  line-height: 0.88;
+  letter-spacing: -0.035em;
+  font-weight: 800;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.ed-title {
+  font-size: clamp(2rem, 5.5vw, 4rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.ed-heading {
+  font-size: clamp(1.375rem, 2.6vw, 2rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+.ed-lede {
+  font-family: var(--font-prose);
+  font-size: clamp(1.125rem, 1.9vw, 1.625rem);
+  line-height: 1.45;
+  font-weight: 300;
+  text-wrap: pretty;
+}
+
+.ed-body {
+  font-family: var(--font-prose);
+  font-size: clamp(1.0625rem, 1.15vw, 1.1875rem);
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+/* The oversized section numeral in the sticky marker column. Outlined rather
+   than solid so it reads as structure, not as content competing with the
+   title beneath it. */
+.ed-index {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  line-height: 0.85;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--ui-accent);
+  paint-order: stroke fill;
+}
+
+/* Safari and Firefox both support -webkit-text-stroke, but fall back to a
+   solid accent if it is ever unavailable. */
+@supports not (-webkit-text-stroke: 1px red) {
+  .ed-index {
+    color: var(--ui-accent);
+  }
+}
+
+/* Mono metadata: section indices, years, tech tags, axis-style captions. */
+.ed-label {
+  font-family: var(--font-mono);
+  font-size: clamp(0.6875rem, 0.8vw, 0.8125rem);
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.ed-meta {
+  font-family: var(--font-mono);
+  font-size: clamp(0.75rem, 0.85vw, 0.875rem);
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Rules ----------------------------------------------------------- */
+
+.ed-rule {
+  border: 0;
+  border-top: 1px solid var(--ui-rule);
+  margin: 0;
+}
+
+.ed-rule-heavy {
+  border: 0;
+  border-top: 2px solid var(--ui-ink);
+  margin: 0;
+}
+
+/* The "live" dot on the headline block. Slower and shallower than Tailwind's
+   animate-pulse, which is too insistent next to body copy. */
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2.4s ease-in-out infinite;
+}
+
+/* --- Link affordance -------------------------------------------------- */
+/* Underline grows from the left on hover rather than just appearing. */
+.ed-link {
+  background-image: linear-gradient(var(--ui-accent), var(--ui-accent));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition: background-size 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.2s;
+}
+
+.ed-link:hover,
+.ed-link:focus-visible {
+  background-size: 100% 1px;
+  color: var(--ui-accent);
+}
+
+/* --- Row hover -------------------------------------------------------- */
+/* Index rows wash with accent on hover; the index number slides. */
+.ed-row {
+  transition: background-color 0.25s ease, padding-inline 0.25s ease;
+}
+
+@media (hover: hover) {
+  .ed-row:hover {
+    background-color: color-mix(in oklab, var(--ui-accent) 8%, transparent);
   }
 }
 

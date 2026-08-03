@@ -1,6 +1,7 @@
-// components/Projects.tsx — staggered grid reveal.
+// components/Projects.tsx - staggered grid reveal.
 import { motion, easeOut } from 'framer-motion';
-import { projects } from '@/data/projects';
+import Link from 'next/link';
+import { projects, projectHref } from '@/data/projects';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -80,21 +81,34 @@ export default function Projects() {
                   ))}
                 </ul>
 
-                <motion.a
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center responsive-button-padding responsive-card-radius text-white font-semibold text-responsive-body shadow-lg hover:shadow-xl transition-all duration-300"
-                  style={{ backgroundColor: project.color }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  View Project
-                  <span aria-hidden="true" className="ml-2">
-                    →
-                  </span>
-                  <span className="sr-only"> — {project.title} (opens in a new tab)</span>
-                </motion.a>
+                {project.slug ? (
+                  <Link
+                    href={projectHref(project.slug, 'classic')}
+                    className="inline-flex items-center responsive-button-padding responsive-card-radius text-white font-semibold text-responsive-body shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                    style={{ backgroundColor: project.color }}
+                  >
+                    Read more
+                    <span aria-hidden="true" className="ml-2">
+                      →
+                    </span>
+                  </Link>
+                ) : (
+                  <motion.a
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center responsive-button-padding responsive-card-radius text-white font-semibold text-responsive-body shadow-lg hover:shadow-xl transition-all duration-300"
+                    style={{ backgroundColor: project.color }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    View Project
+                    <span aria-hidden="true" className="ml-2">
+                      →
+                    </span>
+                    <span className="sr-only"> - {project.title} (opens in a new tab)</span>
+                  </motion.a>
+                )}
               </div>
             </motion.article>
           ))}

@@ -1,11 +1,11 @@
-// data/site.ts — single source of truth for identity, links and SEO defaults.
+// data/site.ts - single source of truth for identity, links and SEO defaults.
 
 export const site = {
   name: 'Antonin Gabet',
   initials: 'AG',
   role: 'Informatics Student | Data & AI Enthusiast | Problem Solver',
   description:
-    'Portfolio of Antonin Gabet — engineering student at EFREI Paris specialising in Data Science and Artificial Intelligence. Projects, studies, writing and passions.',
+    'Portfolio of Antonin Gabet - engineering student at EFREI Paris specialising in Data Science and Artificial Intelligence. Projects, studies, writing and passions.',
   url: 'https://antonin-gabet-portfolio.vercel.app',
   email: 'antonin.gabet@efrei.net',
   github: 'https://github.com/Phaztox',
